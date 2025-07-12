@@ -119,6 +119,15 @@ class MoeniaSite {
         this.mobileMenuToggle.classList.add('active');
         this.mobileMenuToggle.setAttribute('aria-expanded', 'true');
         
+        // Forza il background inline per debug
+        this.nav.style.background = '#002b49 !important';
+        this.nav.style.position = 'fixed !important';
+        this.nav.style.top = '0 !important';
+        this.nav.style.left = '0 !important';
+        this.nav.style.right = '0 !important';
+        this.nav.style.bottom = '0 !important';
+        this.nav.style.zIndex = '9999 !important';
+        
         // Animazione hamburger
         const lines = this.mobileMenuToggle.querySelectorAll('.hamburger-line');
         lines[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
@@ -127,6 +136,8 @@ class MoeniaSite {
         
         // Blocca scroll del body
         document.body.style.overflow = 'hidden';
+        
+        console.log('Mobile menu opened, nav classes:', this.nav.className);
     }
     
     closeMobileMenu() {
@@ -134,6 +145,15 @@ class MoeniaSite {
         this.nav.classList.remove('mobile-open');
         this.mobileMenuToggle.classList.remove('active');
         this.mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        
+        // Pulisci gli stili inline
+        this.nav.style.background = '';
+        this.nav.style.position = '';
+        this.nav.style.top = '';
+        this.nav.style.left = '';
+        this.nav.style.right = '';
+        this.nav.style.bottom = '';
+        this.nav.style.zIndex = '';
         
         // Reset animazione hamburger
         const lines = this.mobileMenuToggle.querySelectorAll('.hamburger-line');
@@ -143,6 +163,8 @@ class MoeniaSite {
         
         // Ripristina scroll del body
         document.body.style.overflow = '';
+        
+        console.log('Mobile menu closed, nav classes:', this.nav.className);
     }
     
     setupSmoothScrolling() {
@@ -208,6 +230,11 @@ class MoeniaSite {
         
         // Inizializza l'indicatore corrente
         this.updateCurrentSection();
+        
+        // Inizializza la visibilità degli indicatori
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight;
+        this.updateSectionIndicatorVisibility(scrollTop, windowHeight);
     }
     
     setupSectionIndicators() {
@@ -278,10 +305,35 @@ class MoeniaSite {
         const windowHeight = window.innerHeight;
         const currentSection = this.getCurrentSection(scrollTop, windowHeight);
         
+        // Gestisci visibilità indicatori
+        this.updateSectionIndicatorVisibility(scrollTop, windowHeight);
+        
         if (currentSection !== this.currentSectionIndex) {
             this.currentSectionIndex = currentSection;
             this.updateSectionIndicator(currentSection);
             console.log('Sezione corrente:', currentSection, 'Scroll position:', scrollTop);
+        }
+    }
+    
+    updateSectionIndicatorVisibility(scrollTop, windowHeight) {
+        const sectionIndicator = document.getElementById('sectionIndicator');
+        if (!sectionIndicator) return;
+        
+        // Ottieni la sezione carousel
+        const carouselSection = document.querySelector('.hero-carousel');
+        if (!carouselSection) return;
+        
+        const carouselTop = carouselSection.offsetTop;
+        const carouselHeight = carouselSection.offsetHeight;
+        const carouselBottom = carouselTop + carouselHeight;
+        
+        // Nascondi gli indicatori quando siamo nella sezione carousel (primi 80% dell'altezza)
+        if (scrollTop >= carouselTop && scrollTop < carouselTop + (carouselHeight * 0.8)) {
+            sectionIndicator.classList.add('hidden');
+            console.log('Indicatori nascosti - nel carousel');
+        } else {
+            sectionIndicator.classList.remove('hidden');
+            console.log('Indicatori visibili - fuori dal carousel');
         }
     }
     
