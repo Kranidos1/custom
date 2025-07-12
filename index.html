@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moenia s.r.l. - Progettazione e Consulenza Architettonica</title>
+    <meta name="description" content="Moenia s.r.l. - Specialisti in progettazione e consulenza integrata in ambito architettonico e ingegneristico">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Preload critical images -->
+    <link rel="preload" href="assets/logo_moenia.png" as="image" type="image/svg+xml">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="#home" aria-label="Moenia s.r.l. - Home">
+                    <img src="assets/logo_moenia.png" alt="Logo Moenia s.r.l." class="logo-img">
+                </a>
+            </div>
+            
+            <nav class="nav" role="navigation" aria-label="Navigazione principale">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link" data-section="home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#about-us" class="nav-link" data-section="about-us">Chi Siamo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#servizi" class="nav-link" data-section="servizi">Servizi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#progetti" class="nav-link" data-section="progetti">Progetti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#contatti" class="nav-link" data-section="contatti">Contatti</a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <button class="mobile-menu-toggle" aria-label="Apri menu mobile" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Carousel -->
+    <section class="hero-carousel" id="home" role="banner" aria-label="Carousel principale">
+        <div class="carousel-container">
+            <div class="carousel-slides" id="carouselSlides">
+                <!-- Slides will be populated by JavaScript -->
+            </div>
+            
+            <!-- Carousel Controls -->
+            <button class="carousel-control carousel-prev" aria-label="Slide precedente">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+            
+            <button class="carousel-control carousel-next" aria-label="Slide successiva">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18l6-6-6-6"/>
+                </svg>
+            </button>
+            
+            <!-- Carousel Indicators -->
+            <div class="carousel-indicators" role="tablist" aria-label="Navigazione carousel">
+                <!-- Indicators will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="about-us" id="about-us">
+        <div class="container">
+            <div class="about-us-content">
+                <div class="about-us-text">
+                    <h2 class="section-title">Chi Siamo</h2>
+                    <p class="section-description">
+                        Moenia è una società di progettazione e consulenza, che offre un approccio integrato all'architettura ed all'ingegneria finalizzata allo sviluppo di infrastrutture per una società avveniristica. Crediamo nella creazione di luoghi dinamici, intuitivi e sostenibili in cui le persone e le comunità possano connettersi con il loro ambiente, tra loro ed essere al centro delle nostre soluzioni.
+                    </p>
+                    <p class="section-description">
+                        Rete, competenze, impegno e passione sono i valori chiave posti al centro della nostra mission. Sempre alla ricerca dell'innovazione e spinti dalla passione, conferiamo qualità a tutti nostri progetti dedicando l'attenzione ai dettagli.
+                    </p>
+                    <!--  -->
+                </div>
+                <div class="about-us-card">
+                    <div class="team-member-card">
+                        <div class="member-image">
+                            <img src="assets/profile_pic.jpg" alt="Membro del team Moenia" loading="lazy">
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Pasquale Rossi</h3>
+                            <p class="member-position">Founder & CEO</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="js/carousel.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 
+</html> 
