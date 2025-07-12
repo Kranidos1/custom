@@ -1,0 +1,208 @@
+[
+  {
+    "id": "marco-rossi",
+    "name": "Marco Rossi",
+    "role": "CEO & Founder",
+    "description": "Esperto di strategia aziendale con oltre 15 anni di esperienza nel settore. Ha guidato la crescita di Moenia da startup a azienda leader nel mercato italiano.",
+    "shortDescription": "Visionario e stratega aziendale",
+    "photo": "images/team-1.jpg",
+    "email": "marco.rossi@moenia.eu",
+    "phone": "+39 06 1234567",
+    "experience": "15+ anni",
+    "education": "MBA - Bocconi University",
+    "expertise": ["Strategia aziendale", "Business Development", "Leadership"],
+    "social": {
+      "linkedin": "https://linkedin.com/in/marcorossi",
+      "twitter": "https://twitter.com/marcorossi",
+      "email": "marco.rossi@moenia.eu"
+    },
+    "achievements": [
+      "Fondatore di Moenia nel 2003",
+      "Crescita aziendale del 500% in 10 anni",
+      "Premio Imprenditore dell'Anno 2018"
+    ]
+  },
+  {
+    "id": "laura-bianchi",
+    "name": "Laura Bianchi",
+    "role": "CTO",
+    "description": "Specialista in architetture software e tecnologie emergenti. Responsabile dell'innovazione tecnologica e della strategia di sviluppo prodotti.",
+    "shortDescription": "Innovatrice tecnologica",
+    "photo": "images/team-2.jpg",
+    "email": "laura.bianchi@moenia.eu",
+    "phone": "+39 06 1234568",
+    "experience": "12+ anni",
+    "education": "Computer Science - Politecnico di Milano",
+    "expertise": ["Architetture Software", "Cloud Computing", "AI/ML"],
+    "social": {
+      "linkedin": "https://linkedin.com/in/laurabianchi",
+      "github": "https://github.com/laurabianchi",
+      "email": "laura.bianchi@moenia.eu"
+    },
+    "achievements": [
+      "Migrazione cloud di 50+ sistemi",
+      "Implementazione AI in 10 progetti",
+      "Speaker a conferenze internazionali"
+    ]
+  },
+  {
+    "id": "giuseppe-verdi",
+    "name": "Giuseppe Verdi",
+    "role": "Lead Designer",
+    "description": "Designer creativo con passione per l'UX e l'accessibilità. Responsabile dell'identità visiva e dell'esperienza utente di tutti i progetti.",
+    "shortDescription": "Designer UX/UI creativo",
+    "photo": "images/team-3.jpg",
+    "email": "giuseppe.verdi@moenia.eu",
+    "phone": "+39 06 1234569",
+    "experience": "10+ anni",
+    "education": "Design - IED Roma",
+    "expertise": ["UX/UI Design", "Brand Identity", "Accessibility"],
+    "social": {
+      "linkedin": "https://linkedin.com/in/giuseppeverdi",
+      "behance": "https://behance.net/giuseppeverdi",
+      "email": "giuseppe.verdi@moenia.eu"
+    },
+    "achievements": [
+      "Design di 100+ interfacce utente",
+      "Premio Design Award 2021",
+      "Certificazione WCAG 2.1"
+    ]
+  },
+  {
+    "id": "anna-neri",
+    "name": "Anna Neri",
+    "role": "Marketing Manager",
+    "description": "Esperta di marketing digitale e strategie di crescita. Responsabile della comunicazione aziendale e delle campagne marketing.",
+    "shortDescription": "Stratega di marketing digitale",
+    "photo": "images/team-4.jpg",
+    "email": "anna.neri@moenia.eu",
+    "phone": "+39 06 1234570",
+    "experience": "8+ anni",
+    "education": "Marketing - Università di Roma",
+    "expertise": ["Digital Marketing", "Growth Hacking", "Content Strategy"],
+    "social": {
+      "linkedin": "https://linkedin.com/in/annaneri",
+      "instagram": "https://instagram.com/annaneri",
+      "email": "anna.neri@moenia.eu"
+    },
+    "achievements": [
+      "Crescita lead generation del 300%",
+      "Gestione budget marketing €2M+",
+      "Certificazione Google Ads Expert"
+    ]
+  },
+  {
+    "id": "paolo-gialli",
+    "name": "Paolo Gialli",
+    "role": "Senior Developer",
+    "description": "Sviluppatore full-stack con expertise in tecnologie moderne. Specializzato in React, Node.js e architetture cloud-native.",
+    "shortDescription": "Sviluppatore full-stack esperto",
+    "photo": "images/team-5.jpg",
+    "email": "paolo.gialli@moenia.eu",
+    "phone": "+39 06 1234571",
+    "experience": "9+ anni",
+    "education": "Computer Engineering - Sapienza",
+    "expertise": ["React", "Node.js", "AWS", "Microservices"],
+    "social": {
+      "linkedin": "https://linkedin.com/in/paologialli",
+      "github": "https://github.com/paologialli",
+      "email": "paolo.gialli@moenia.eu"
+    },
+    "achievements": [
+      "Sviluppo di 50+ applicazioni",
+      "Contributore open source",
+      "Speaker a meetup tecnici"
+    ]
+  },
+  {
+    "id": "sofia-rossi",
+    "name": "Sofia Rossi",
+    "role": "UX Researcher",
+    "description": "Ricercatrice UX con focus su user testing e analisi comportamentale. Responsabile della ricerca utente e dell'ottimizzazione dell'esperienza.",
+    "shortDescription": "Ricercatrice UX esperta",
+    "photo": "images/team-6.jpg",
+    "email": "sofia.rossi@moenia.eu",
+    "phone": "+39 06 1234572",
+    "experience": "7+ anni",
+    "education": "Psychology - Università di Bologna",
+    "expertise": ["User Research", "Usability Testing", "Behavioral Analysis"],
+    "social": {
+      "linkedin": "https://linkedin.com/in/sofiarossi",
+      "twitter": "https://twitter.com/sofiarossi",
+      "email": "sofia.rossi@moenia.eu"
+    },
+    "achievements": [
+      "Conduzione di 200+ test utente",
+      "Pubblicazioni su UX Magazine",
+      "Certificazione Nielsen Norman Group"
+    ]
+  },
+  {
+    "id": "luca-blu",
+    "name": "Luca Blu",
+    "role": "DevOps Engineer",
+    "description": "Esperto in automazione, CI/CD e infrastrutture cloud. Responsabile della gestione dell'infrastruttura tecnica e della sicurezza.",
+    "shortDescription": "Esperto DevOps e sicurezza",
+    "photo": "images/team-7.jpg",
+    "email": "luca.blu@moenia.eu",
+    "phone": "+39 06 1234573",
+    "experience": "6+ anni",
+    "education": "Computer Science - Università di Pisa",
+    "expertise": ["DevOps", "AWS", "Docker", "Kubernetes"],
+    "social": {
+      "linkedin": "https://linkedin.com/in/lucablu",
+      "github": "https://github.com/lucablu",
+      "email": "luca.blu@moenia.eu"
+    },
+    "achievements": [
+      "Automazione del 90% dei processi",
+      "Riduzione downtime del 99.9%",
+      "Certificazioni AWS e Kubernetes"
+    ]
+  },
+  {
+    "id": "elena-rosa",
+    "name": "Elena Rosa",
+    "role": "Product Manager",
+    "description": "Product manager con esperienza nella gestione di prodotti digitali complessi. Responsabile della roadmap di prodotto e della strategia di sviluppo.",
+    "shortDescription": "Product manager strategica",
+    "photo": "images/team-8.jpg",
+    "email": "elena.rosa@moenia.eu",
+    "phone": "+39 06 1234574",
+    "experience": "8+ anni",
+    "education": "Business Administration - Bocconi",
+    "expertise": ["Product Strategy", "Agile", "Data Analysis"],
+    "social": {
+      "linkedin": "https://linkedin.com/in/elenarosa",
+      "email": "elena.rosa@moenia.eu"
+    },
+    "achievements": [
+      "Lancio di 15+ prodotti digitali",
+      "Crescita revenue del 200%",
+      "Certificazione Scrum Master"
+    ]
+  },
+  {
+    "id": "marco-verde",
+    "name": "Marco Verde",
+    "role": "Data Scientist",
+    "description": "Specialista in machine learning e analisi dati. Responsabile dello sviluppo di modelli predittivi e analisi avanzate per i clienti.",
+    "shortDescription": "Data scientist esperto",
+    "photo": "images/team-9.jpg",
+    "email": "marco.verde@moenia.eu",
+    "phone": "+39 06 1234575",
+    "experience": "5+ anni",
+    "education": "Statistics - Università di Firenze",
+    "expertise": ["Machine Learning", "Python", "R", "Big Data"],
+    "social": {
+      "linkedin": "https://linkedin.com/in/marcoverde",
+      "github": "https://github.com/marcoverde",
+      "email": "marco.verde@moenia.eu"
+    },
+    "achievements": [
+      "Sviluppo di 20+ modelli ML",
+      "Pubblicazioni scientifiche",
+      "Certificazione TensorFlow"
+    ]
+  }
+] 

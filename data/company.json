@@ -1,0 +1,102 @@
+{
+  "name": "Moenia",
+  "tagline": "Innovazione e qualità al servizio del vostro successo",
+  "description": "Moenia è un'azienda leader nel settore, specializzata nella fornitura di servizi professionali di alta qualità. Con oltre due decenni di esperienza, abbiamo sviluppato competenze uniche che ci permettono di offrire soluzioni innovative e personalizzate per i nostri clienti.",
+  "logo": "images/logo.png",
+  "logoWhite": "images/logo-white.png",
+  "website": "https://www.moenia.eu",
+  "founded": "2003",
+  "employees": "25-50",
+  "location": "Roma, Italia",
+  "industry": "Servizi Professionali",
+  "stats": [
+    {
+      "value": 20,
+      "label": "Anni di Esperienza",
+      "icon": "fas fa-calendar-alt"
+    },
+    {
+      "value": 500,
+      "label": "Progetti Completati",
+      "icon": "fas fa-project-diagram"
+    },
+    {
+      "value": 50,
+      "label": "Clienti Soddisfatti",
+      "icon": "fas fa-smile"
+    }
+  ],
+  "timeline": [
+    {
+      "year": "2003",
+      "title": "Fondazione",
+      "description": "Nasce Moenia con l'obiettivo di rivoluzionare il settore dei servizi professionali, partendo da una visione innovativa e un team di esperti qualificati.",
+      "icon": "fas fa-rocket"
+    },
+    {
+      "year": "2010",
+      "title": "Espansione",
+      "description": "Ampliamento dei servizi offerti e apertura di nuove sedi operative. Consolidamento della presenza sul territorio nazionale.",
+      "icon": "fas fa-chart-line"
+    },
+    {
+      "year": "2015",
+      "title": "Innovazione Tecnologica",
+      "description": "Investimento significativo in tecnologie emergenti e sviluppo di soluzioni digitali all'avanguardia per i clienti.",
+      "icon": "fas fa-microchip"
+    },
+    {
+      "year": "2018",
+      "title": "Riconoscimenti",
+      "description": "Premi e certificazioni per la qualità dei servizi offerti. Riconoscimento come azienda leader nel settore.",
+      "icon": "fas fa-award"
+    },
+    {
+      "year": "2020",
+      "title": "Digital Transformation",
+      "description": "Accelerazione della trasformazione digitale e adozione di metodologie di lavoro innovative per affrontare le nuove sfide.",
+      "icon": "fas fa-laptop-code"
+    },
+    {
+      "year": "2023",
+      "title": "Sostenibilità",
+      "description": "Focus su tecnologie sostenibili e soluzioni green. Impegno per un futuro più sostenibile e responsabile.",
+      "icon": "fas fa-globe"
+    }
+  ],
+  "values": [
+    {
+      "title": "Innovazione",
+      "description": "Ricerca continua di soluzioni innovative per anticipare le esigenze del mercato",
+      "icon": "fas fa-lightbulb"
+    },
+    {
+      "title": "Qualità",
+      "description": "Eccellenza in ogni aspetto del nostro lavoro e nei servizi offerti",
+      "icon": "fas fa-star"
+    },
+    {
+      "title": "Collaborazione",
+      "description": "Lavoro di squadra e partnership con i clienti per raggiungere obiettivi comuni",
+      "icon": "fas fa-handshake"
+    },
+    {
+      "title": "Integrità",
+      "description": "Trasparenza, onestà e rispetto nei rapporti con clienti e partner",
+      "icon": "fas fa-shield-alt"
+    }
+  ],
+  "mission": "La nostra missione è quella di accompagnare le aziende nel loro percorso di crescita, fornendo consulenza strategica, supporto operativo e soluzioni tecnologiche all'avanguardia.",
+  "vision": "Essere riconosciuti come partner strategico di riferimento per le aziende che vogliono innovare e crescere in modo sostenibile.",
+  "certifications": [
+    "ISO 9001:2015",
+    "ISO 27001",
+    "Certificazione Qualità Servizi"
+  ],
+  "partners": [
+    "Microsoft",
+    "Google",
+    "AWS",
+    "Salesforce"
+  ]
+} 

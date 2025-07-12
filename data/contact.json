@@ -1,0 +1,110 @@
+{
+  "company": {
+    "name": "Moenia",
+    "legalName": "Moenia S.r.l.",
+    "vatNumber": "IT12345678901",
+    "rea": "RM-123456"
+  },
+  "address": {
+    "street": "Via Roma 123",
+    "city": "Roma",
+    "postalCode": "00100",
+    "country": "Italia",
+    "fullAddress": "Via Roma 123, 00100 Roma, Italia"
+  },
+  "contact": {
+    "phone": {
+      "main": "+39 06 1234567",
+      "mobile": "+39 333 1234567",
+      "fax": "+39 06 1234568"
+    },
+    "email": {
+      "general": "info@moenia.eu",
+      "sales": "vendite@moenia.eu",
+      "support": "supporto@moenia.eu",
+      "careers": "lavora@moenia.eu"
+    }
+  },
+  "hours": {
+    "weekdays": "Lun-Ven: 9:00-18:00",
+    "saturday": "Sab: 9:00-13:00",
+    "sunday": "Dom: Chiuso",
+    "holidays": "Festivi: Chiuso"
+  },
+  "social": {
+    "facebook": "https://facebook.com/moenia",
+    "twitter": "https://twitter.com/moenia",
+    "linkedin": "https://linkedin.com/company/moenia",
+    "instagram": "https://instagram.com/moenia",
+    "youtube": "https://youtube.com/moenia",
+    "github": "https://github.com/moenia"
+  },
+  "departments": [
+    {
+      "name": "Vendite",
+      "email": "vendite@moenia.eu",
+      "phone": "+39 06 1234569"
+    },
+    {
+      "name": "Supporto Tecnico",
+      "email": "supporto@moenia.eu",
+      "phone": "+39 06 1234570"
+    },
+    {
+      "name": "Risorse Umane",
+      "email": "hr@moenia.eu",
+      "phone": "+39 06 1234571"
+    },
+    {
+      "name": "Marketing",
+      "email": "marketing@moenia.eu",
+      "phone": "+39 06 1234572"
+    }
+  ],
+  "emergency": {
+    "phone": "+39 333 1234567",
+    "available": "24/7 per clienti premium"
+  },
+  "locations": [
+    {
+      "name": "Sede Principale",
+      "address": "Via Roma 123, 00100 Roma",
+      "phone": "+39 06 1234567",
+      "email": "roma@moenia.eu"
+    },
+    {
+      "name": "Sede Milano",
+      "address": "Via Milano 456, 20100 Milano",
+      "phone": "+39 02 1234567",
+      "email": "milano@moenia.eu"
+    },
+    {
+      "name": "Sede Napoli",
+      "address": "Via Napoli 789, 80100 Napoli",
+      "phone": "+39 081 1234567",
+      "email": "napoli@moenia.eu"
+    }
+  ],
+  "support": {
+    "hours": "Lun-Ven: 8:00-20:00",
+    "response": "Entro 4 ore",
+    "priority": "Entro 1 ora per clienti premium"
+  },
+  "newsletter": {
+    "description": "Iscriviti alla nostra newsletter per ricevere aggiornamenti su novità, eventi e offerte speciali.",
+    "frequency": "Settimanale",
+    "unsubscribe": "Puoi disiscriverti in qualsiasi momento"
+  },
+  "privacy": {
+    "policy": "https://www.moenia.eu/privacy",
+    "cookies": "https://www.moenia.eu/cookies",
+    "terms": "https://www.moenia.eu/terms"
+  },
+  "map": {
+    "embed": "https://maps.google.com/maps?q=Via+Roma+123,+Roma&output=embed",
+    "coordinates": {
+      "lat": 41.9028,
+      "lng": 12.4964
+    }
+  }
+} 
