@@ -1,0 +1,611 @@
+/**
+ * Moenia s.r.l. - Main JavaScript
+ * Gestisce header, navigazione e funzionalità generali del sito
+ */
+
+class MoeniaSite {
+    constructor() {
+        this.header = null;
+        this.mobileMenuToggle = null;
+        this.nav = null;
+        this.isMobileMenuOpen = false;
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupHeader();
+        this.setupMobileMenu();
+        this.setupSmoothScrolling();
+        this.setupSectionNavigation();
+        this.setupFooterVisibility();
+        this.setupConfigLoader();
+        this.setupIntersectionObserver();
+    }
+    
+    setupHeader() {
+        this.header = document.getElementById('header');
+        if (!this.header) return;
+        
+        // Gestione header trasparente/solido (solo su desktop)
+        if (window.innerWidth > 768) {
+            window.addEventListener('scroll', () => {
+                this.handleHeaderScroll();
+            });
+        }
+        
+        // Gestione resize window
+        window.addEventListener('resize', () => {
+            this.handleResize();
+        });
+    }
+    
+    handleHeaderScroll() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const heroHeight = document.querySelector('.hero-carousel')?.offsetHeight || 600;
+        
+        if (scrollTop > heroHeight * 0.3) {
+            this.header.classList.add('scrolled');
+        } else {
+            this.header.classList.remove('scrolled');
+        }
+        
+        // Gestisci visibilità del footer
+        this.updateFooterVisibility(scrollTop, heroHeight);
+    }
+    
+    setupFooterVisibility() {
+        this.footer = document.querySelector('.footer');
+        if (!this.footer) return;
+        
+        // Inizializza la visibilità del footer
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const heroHeight = document.querySelector('.hero-carousel')?.offsetHeight || 600;
+        this.updateFooterVisibility(scrollTop, heroHeight);
+    }
+    
+    updateFooterVisibility(scrollTop, heroHeight) {
+        if (!this.footer) return;
+        
+        // Nascondi il footer nel carousel (primi 80% dell'altezza del carousel)
+        if (scrollTop < heroHeight * 0.8) {
+            this.footer.classList.add('hidden');
+        } else {
+            this.footer.classList.remove('hidden');
+        }
+    }
+    
+    setupMobileMenu() {
+        this.mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        this.nav = document.querySelector('.nav');
+        
+        if (!this.mobileMenuToggle || !this.nav) return;
+        
+        this.mobileMenuToggle.addEventListener('click', () => {
+            this.toggleMobileMenu();
+        });
+        
+        // Chiudi menu mobile quando si clicca su un link
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (this.isMobileMenuOpen) {
+                    this.closeMobileMenu();
+                }
+            });
+        });
+        
+        // Chiudi menu mobile quando si clicca fuori
+        document.addEventListener('click', (e) => {
+            if (this.isMobileMenuOpen && 
+                !this.nav.contains(e.target) && 
+                !this.mobileMenuToggle.contains(e.target)) {
+                this.closeMobileMenu();
+            }
+        });
+    }
+    
+    toggleMobileMenu() {
+        if (this.isMobileMenuOpen) {
+            this.closeMobileMenu();
+        } else {
+            this.openMobileMenu();
+        }
+    }
+    
+    openMobileMenu() {
+        this.isMobileMenuOpen = true;
+        this.nav.classList.add('mobile-open');
+        this.mobileMenuToggle.classList.add('active');
+        this.mobileMenuToggle.setAttribute('aria-expanded', 'true');
+        
+        // Animazione hamburger
+        const lines = this.mobileMenuToggle.querySelectorAll('.hamburger-line');
+        lines[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+        lines[1].style.opacity = '0';
+        lines[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+        
+        // Blocca scroll del body
+        document.body.style.overflow = 'hidden';
+    }
+    
+    closeMobileMenu() {
+        this.isMobileMenuOpen = false;
+        this.nav.classList.remove('mobile-open');
+        this.mobileMenuToggle.classList.remove('active');
+        this.mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        
+        // Reset animazione hamburger
+        const lines = this.mobileMenuToggle.querySelectorAll('.hamburger-line');
+        lines[0].style.transform = 'none';
+        lines[1].style.opacity = '1';
+        lines[2].style.transform = 'none';
+        
+        // Ripristina scroll del body
+        document.body.style.overflow = '';
+    }
+    
+    setupSmoothScrolling() {
+        // Smooth scroll per link interni
+        const internalLinks = document.querySelectorAll('a[href^="#"]');
+        internalLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href === '#') return;
+                
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    this.scrollToSection(target);
+                }
+            });
+        });
+    }
+    
+    setupSectionNavigation() {
+        // Variabili per il controllo dello scroll
+        this.isScrolling = false;
+        this.currentSectionIndex = 0;
+        this.sections = [];
+        this.scrollThreshold = 50;
+        this.scrollCooldown = 1000;
+        this.sectionDots = [];
+        this.lastScrollTime = 0;
+        this.wheelNavigationEnabled = true;
+        
+        // Ottieni tutte le sezioni
+        this.sections = document.querySelectorAll('section[id]');
+        console.log('Sezioni trovate:', this.sections.length);
+        
+        // Verifica che le sezioni siano valide
+        if (this.sections.length === 0) {
+            console.warn('Nessuna sezione trovata! Verifica che le sezioni abbiano un ID.');
+            return;
+        }
+        
+        // Log delle sezioni trovate
+        this.sections.forEach((section, index) => {
+            console.log(`Sezione ${index}:`, section.id, section.offsetTop);
+        });
+        
+        // Setup indicatori delle sezioni
+        this.setupSectionIndicators();
+        
+        // Aggiungi event listener per lo scroll
+        window.addEventListener('scroll', () => {
+            this.handleSectionScroll();
+        });
+        
+        // Aggiungi event listener per tasti freccia e spazio
+        document.addEventListener('keydown', (e) => {
+            this.handleKeyboardNavigation(e);
+        });
+        
+        // Aggiungi event listener per wheel (mouse wheel)
+        document.addEventListener('wheel', (e) => {
+            this.handleWheelNavigation(e);
+        }, { passive: false });
+        
+        // Inizializza l'indicatore corrente
+        this.updateCurrentSection();
+    }
+    
+    setupSectionIndicators() {
+        const indicator = document.getElementById('sectionIndicator');
+        if (!indicator) {
+            console.log('Indicatore sezioni non trovato');
+            return;
+        }
+        
+        // Ottieni tutti i dots
+        this.sectionDots = indicator.querySelectorAll('.section-dot');
+        console.log('Dots trovati:', this.sectionDots.length);
+        
+        // Debug: verifica che i target corrispondano alle sezioni
+        this.sectionDots.forEach((dot, index) => {
+            const target = dot.getAttribute('data-target');
+            const section = document.querySelector(target);
+            console.log(`Dot ${index}:`, target, section ? '✓' : '✗');
+        });
+        
+        // Aggiungi event listener per click sui dots
+        this.sectionDots.forEach((dot, index) => {
+            dot.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const target = dot.getAttribute('data-target');
+                const section = document.querySelector(target);
+                if (section) {
+                    console.log('Click on indicator:', index, target);
+                    this.scrollToSection(section);
+                } else {
+                    console.warn('Section not found:', target);
+                }
+            });
+        });
+    }
+    
+    updateSectionIndicator(activeIndex) {
+        if (!this.sectionDots || this.sectionDots.length === 0) {
+            console.warn('Nessun indicatore trovato');
+            return;
+        }
+        
+        this.sectionDots.forEach((dot, index) => {
+            if (index === activeIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+        
+        console.log('Indicatore aggiornato:', activeIndex);
+    }
+    
+    handleSectionScroll() {
+        if (this.isScrolling) return;
+        
+        const now = Date.now();
+        if (now - this.lastScrollTime < 100) return; // Debounce manuale
+        this.lastScrollTime = now;
+        
+        this.updateCurrentSection();
+    }
+    
+    updateCurrentSection() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight;
+        const currentSection = this.getCurrentSection(scrollTop, windowHeight);
+        
+        if (currentSection !== this.currentSectionIndex) {
+            this.currentSectionIndex = currentSection;
+            this.updateSectionIndicator(currentSection);
+            console.log('Sezione corrente:', currentSection, 'Scroll position:', scrollTop);
+        }
+    }
+    
+    getCurrentSection(scrollTop, windowHeight) {
+        let currentIndex = 0;
+        
+        this.sections.forEach((section, index) => {
+            const sectionTop = section.offsetTop;
+            const sectionBottom = sectionTop + section.offsetHeight;
+            const threshold = windowHeight * 0.4; // 40% della viewport
+            
+            if (scrollTop >= sectionTop - threshold && 
+                scrollTop < sectionBottom - threshold) {
+                currentIndex = index;
+            }
+        });
+        
+        return currentIndex;
+    }
+    
+    handleKeyboardNavigation(e) {
+        if (this.isScrolling) return;
+        
+        switch(e.key) {
+            case 'ArrowDown':
+            case 'PageDown':
+            case ' ':
+                e.preventDefault();
+                this.scrollToNextSection();
+                break;
+            case 'ArrowUp':
+            case 'PageUp':
+                e.preventDefault();
+                this.scrollToPreviousSection();
+                break;
+            case 'Home':
+                e.preventDefault();
+                this.scrollToSection(this.sections[0]);
+                break;
+            case 'End':
+                e.preventDefault();
+                this.scrollToSection(this.sections[this.sections.length - 1]);
+                break;
+        }
+    }
+    
+    handleWheelNavigation(e) {
+        // Non interferire se stiamo già scrollando programmaticamente
+        if (this.isScrolling) {
+            return;
+        }
+        
+        // Se la navigazione automatica è disabilitata, non interferire
+        if (!this.wheelNavigationEnabled) {
+            return;
+        }
+        
+        const now = Date.now();
+        
+        // Cooldown per evitare scroll multipli
+        if (now - this.lastScrollTime < 800) {
+            return;
+        }
+        
+        // Determina la direzione dello scroll
+        const isScrollingDown = e.deltaY > 0;
+        const isScrollingUp = e.deltaY < 0;
+        
+        // Solo se lo scroll è significativo
+        if (Math.abs(e.deltaY) < 50) {
+            return;
+        }
+        
+        // Previeni il comportamento di default
+        e.preventDefault();
+        this.lastScrollTime = now;
+        
+        // Naviga alla sezione successiva o precedente
+        if (isScrollingDown) {
+            this.scrollToNextSection();
+        } else if (isScrollingUp) {
+            this.scrollToPreviousSection();
+        }
+    }
+    
+    scrollToNextSection() {
+        if (this.currentSectionIndex < this.sections.length - 1) {
+            const nextSection = this.sections[this.currentSectionIndex + 1];
+            if (nextSection) {
+                this.scrollToSection(nextSection);
+                console.log('Scrolling to next section:', this.currentSectionIndex + 1);
+            }
+        }
+    }
+    
+    scrollToPreviousSection() {
+        if (this.currentSectionIndex > 0) {
+            const prevSection = this.sections[this.currentSectionIndex - 1];
+            if (prevSection) {
+                this.scrollToSection(prevSection);
+                console.log('Scrolling to previous section:', this.currentSectionIndex - 1);
+            }
+        }
+    }
+    
+    scrollToSection(section) {
+        if (this.isScrolling) return;
+        if (!section) return;
+        
+        this.isScrolling = true;
+        const headerHeight = this.header?.offsetHeight || 80;
+        const targetPosition = Math.max(0, section.offsetTop - headerHeight);
+        
+        // Aggiorna l'indice della sezione corrente
+        const sectionIndex = Array.from(this.sections).indexOf(section);
+        if (sectionIndex !== -1) {
+            this.currentSectionIndex = sectionIndex;
+            this.updateSectionIndicator(sectionIndex);
+            console.log('Scrolling to section:', sectionIndex, section.id);
+        }
+        
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
+        
+        // Reset del flag di scrolling dopo l'animazione
+        setTimeout(() => {
+            this.isScrolling = false;
+        }, 1200); // Aumentato per dare più tempo all'animazione
+    }
+    
+    async setupConfigLoader() {
+        try {
+            const response = await fetch('data/config.json');
+            const config = await response.json();
+            this.loadConfigData(config);
+        } catch (error) {
+            console.warn('Config file not found, using default content');
+        }
+    }
+    
+    loadConfigData(config) {
+        // Carica contenuti dal config
+        const configElements = document.querySelectorAll('[data-config]');
+        configElements.forEach(element => {
+            const configPath = element.getAttribute('data-config');
+            const value = this.getNestedValue(config, configPath);
+            if (value) {
+                if (element.tagName === 'IMG') {
+                    element.src = value;
+                } else {
+                    element.textContent = value;
+                }
+            }
+        });
+    }
+    
+    getNestedValue(obj, path) {
+        return path.split('.').reduce((current, key) => {
+            return current && current[key] !== undefined ? current[key] : null;
+        }, obj);
+    }
+    
+    setupIntersectionObserver() {
+        // Animazioni al scroll per elementi
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+        
+        // Osserva elementi da animare
+        const animateElements = document.querySelectorAll('.feature, .chi-siamo-image');
+        animateElements.forEach(el => {
+            observer.observe(el);
+        });
+    }
+    
+    handleResize() {
+        // Chiudi menu mobile su resize se aperto
+        if (this.isMobileMenuOpen && window.innerWidth > 768) {
+            this.closeMobileMenu();
+        }
+        
+        // Gestisci il comportamento dell'header su resize
+        if (window.innerWidth > 768) {
+            // Su desktop, ripristina la logica di scroll
+            window.addEventListener('scroll', () => {
+                this.handleHeaderScroll();
+            });
+        } else {
+            // Su mobile, rimuovi la classe scrolled
+            this.header.classList.remove('scrolled');
+        }
+    }
+    
+    // Utility methods
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+    
+    // Metodo per testare se tutto funziona
+    testSectionNavigation() {
+        console.log('Test navigazione sezioni:');
+        console.log('- Sezioni trovate:', this.sections.length);
+        console.log('- Dots trovati:', this.sectionDots.length);
+        console.log('- Sezione corrente:', this.currentSectionIndex);
+        console.log('- Header height:', this.header?.offsetHeight);
+        console.log('- Wheel navigation enabled:', this.wheelNavigationEnabled);
+    }
+    
+    // Metodo per abilitare/disabilitare la navigazione automatica
+    toggleWheelNavigation() {
+        this.wheelNavigationEnabled = !this.wheelNavigationEnabled;
+        console.log('Wheel navigation:', this.wheelNavigationEnabled ? 'enabled' : 'disabled');
+    }
+    
+    // Gestione errori immagini
+    setupImageErrorHandling() {
+        const images = document.querySelectorAll('img');
+        images.forEach(img => {
+            img.addEventListener('error', () => {
+                img.style.display = 'none';
+                console.warn(`Image failed to load: ${img.src}`);
+            });
+        });
+        
+        // Assicurati che l'immagine del team member non interferisca con il carousel
+        const teamMemberImage = document.querySelector('.team-member-card .member-image img');
+        if (teamMemberImage) {
+            teamMemberImage.style.zIndex = '1';
+            teamMemberImage.style.position = 'relative';
+        }
+    }
+}
+
+// Inizializza il sito quando il DOM è pronto
+document.addEventListener('DOMContentLoaded', () => {
+    const site = new MoeniaSite();
+    
+    // Setup error handling per immagini
+    site.setupImageErrorHandling();
+    
+    // Test della navigazione sezioni dopo un breve delay
+    setTimeout(() => {
+        site.testSectionNavigation();
+    }, 1000);
+});
+
+// CSS per menu mobile (aggiunto dinamicamente se necessario)
+const mobileMenuCSS = `
+@media (max-width: 768px) {
+    .nav {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: rgba(0, 43, 73, 0.98);
+        backdrop-filter: blur(10px);
+        transform: translateY(-100%);
+        transition: transform 0.3s ease;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .nav.mobile-open {
+        transform: translateY(0);
+    }
+    
+    .nav-list {
+        flex-direction: column;
+        padding: 2rem;
+        gap: 1rem;
+    }
+    
+    .nav-link {
+        color: var(--text-light) !important;
+        font-size: 1.1rem;
+        padding: 1rem;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+    
+    .nav-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--accent-color) !important;
+    }
+}
+
+.animate-in {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+`;
+
+// Aggiungi CSS per menu mobile se non presente
+if (!document.querySelector('#mobile-menu-styles')) {
+    const style = document.createElement('style');
+    style.id = 'mobile-menu-styles';
+    style.textContent = mobileMenuCSS;
+    document.head.appendChild(style);
+} 

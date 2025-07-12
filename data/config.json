@@ -1,0 +1,215 @@
+{
+  "site": {
+    "name": "Moenia s.r.l.",
+    "description": "Progettazione e Consulenza Architettonica",
+    "tagline": "Soluzioni innovative per il futuro dell'edilizia"
+  },
+  "colors": {
+    "primary": "#2c5aa0",
+    "secondary": "#1e3a5f",
+    "accent": "#f39c12",
+    "text_primary": "#333333",
+    "text_secondary": "#666666",
+    "text_light": "#ffffff",
+    "background_primary": "#ffffff",
+    "background_secondary": "#f8f9fa",
+    "background_dark": "#1a1a1a"
+  },
+  "fonts": {
+    "primary": "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    "secondary": "Georgia, 'Times New Roman', serif"
+  },
+  "carousel": {
+    "autoplay_delay": 5000,
+    "slides": [
+      {
+        "image": "assets/carousel/1.png",
+        "title": "Progettazione Architettonica",
+        "subtitle": "Soluzioni innovative per il futuro dell'edilizia",
+        "cta": "Scopri i nostri progetti",
+        "cta_url": "#progetti"
+      },
+      {
+        "image": "assets/carousel/2.jpg",
+        "title": "Consulenza Ingegneristica",
+        "subtitle": "Competenza tecnica al servizio dell'innovazione",
+        "cta": "I nostri servizi",
+        "cta_url": "#servizi"
+      },
+      {
+        "image": "assets/carousel/3.jpg",
+        "title": "Sostenibilità",
+        "subtitle": "Progetti eco-compatibili per un futuro migliore",
+        "cta": "Contattaci",
+        "cta_url": "#contatti"
+      },
+      {
+        "image": "assets/carousel/4.jpg",
+        "title": "Innovazione Tecnologica",
+        "subtitle": "Tecnologie all'avanguardia per progetti di eccellenza",
+        "cta": "Scopri di più",
+        "cta_url": "#servizi"
+      },
+      {
+        "image": "assets/carousel/5.jpg",
+        "title": "Design Sostenibile",
+        "subtitle": "Architettura che rispetta l'ambiente e il futuro",
+        "cta": "I nostri progetti green",
+        "cta_url": "#progetti"
+      },
+      {
+        "image": "assets/carousel/6.jpg",
+        "title": "Eccellenza Progettuale",
+        "subtitle": "Qualità e precisione in ogni dettaglio",
+        "cta": "Conosci il nostro team",
+        "cta_url": "#chi-siamo"
+      },
+      {
+        "image": "assets/carousel/7.jpg",
+        "title": "Soluzioni Personalizzate",
+        "subtitle": "Ogni progetto è unico, ogni soluzione è su misura",
+        "cta": "Inizia il tuo progetto",
+        "cta_url": "#contatti"
+      },
+      {
+        "image": "assets/carousel/8.jpg",
+        "title": "Visione del Futuro",
+        "subtitle": "Progettiamo oggi gli spazi di domani",
+        "cta": "Collabora con noi",
+        "cta_url": "#contatti"
+      }
+    ]
+  },
+  "chi_siamo": {
+    "title": "Chi Siamo",
+    "description": "Moenia è una società di progettazione e consulenza, che offre un approccio integrato all'architettura ed all'ingegneria finalizzata allo sviluppo di infrastrutture per una società avveniristica. Crediamo nella creazione di luoghi dinamici, intuitivi e sostenibili in cui le persone e le comunità possano connettersi con il loro ambiente, tra loro ed essere al centro delle nostre soluzioni.",
+    "values_description": "Rete, competenze, impegno e passione sono i valori chiave posti al centro della nostra mission. Sempre alla ricerca dell'innovazione e spinti dalla passione, conferiamo qualità a tutti nostri progetti dedicando l'attenzione ai dettagli.",
+    "team_member": {
+      "image": "assets/team-member.jpg",
+      "name": "Nome Cognome",
+      "position": "Posizione"
+    },
+    "services": [
+      {
+        "icon": "🏗️",
+        "name": "Architettura"
+      },
+      {
+        "icon": "⚙️",
+        "name": "Ingegneria"
+      },
+      {
+        "icon": "📋",
+        "name": "Project Management"
+      },
+      {
+        "icon": "📊",
+        "name": "Programmazione e Controllo"
+      },
+      {
+        "icon": "🏢",
+        "name": "Servizi alle Imprese"
+      },
+      {
+        "icon": "🏛️",
+        "name": "Servizi alle P.A."
+      }
+    ]
+  },
+  "servizi": {
+    "title": "I Nostri Servizi",
+    "description": "Offriamo una gamma completa di servizi di progettazione e consulenza per soddisfare ogni esigenza.",
+    "items": [
+      {
+        "title": "Progettazione Architettonica",
+        "description": "Progetti residenziali, commerciali e industriali",
+        "icon": "assets/icons/architecture.svg"
+      },
+      {
+        "title": "Consulenza Ingegneristica",
+        "description": "Analisi strutturali e soluzioni tecniche",
+        "icon": "assets/icons/engineering.svg"
+      },
+      {
+        "title": "Sostenibilità",
+        "description": "Certificazioni energetiche e green building",
+        "icon": "assets/icons/sustainability.svg"
+      },
+      {
+        "title": "Direzione Lavori",
+        "description": "Supervisione e controllo dei cantieri",
+        "icon": "assets/icons/supervision.svg"
+      }
+    ]
+  },
+  "progetti": {
+    "title": "I Nostri Progetti",
+    "description": "Scopri alcuni dei nostri progetti più significativi.",
+    "items": [
+      {
+        "title": "Centro Commerciale Green",
+        "category": "Commerciale",
+        "image": "assets/progetti/progetto-1.jpg",
+        "description": "Centro commerciale sostenibile con certificazione LEED"
+      },
+      {
+        "title": "Residenza Moderna",
+        "category": "Residenziale",
+        "image": "assets/progetti/progetto-2.jpg",
+        "description": "Villa contemporanea con design sostenibile"
+      },
+      {
+        "title": "Uffici Corporate",
+        "category": "Uffici",
+        "image": "assets/progetti/progetto-3.jpg",
+        "description": "Sede aziendale con tecnologie innovative"
+      }
+    ]
+  },
+  "contatti": {
+    "title": "Contattaci",
+    "description": "Siamo qui per aiutarti a realizzare i tuoi progetti.",
+    "info": {
+      "indirizzo": "Via Roma 123, 00100 Roma",
+      "telefono": "+39 06 1234567",
+      "email": "info@moenia.it",
+      "orari": "Lun-Ven: 9:00-18:00"
+    }
+  },
+  "navigation": {
+    "menu_items": [
+      {
+        "label": "Home",
+        "url": "#home"
+      },
+      {
+        "label": "Chi Siamo",
+        "url": "#chi-siamo"
+      },
+      {
+        "label": "Servizi",
+        "url": "#servizi"
+      },
+      {
+        "label": "Progetti",
+        "url": "#progetti"
+      },
+      {
+        "label": "Contatti",
+        "url": "#contatti"
+      }
+    ]
+  },
+  "images": {
+    "logo": "assets/logo_moenia.png",
+    "favicon": "assets/favicon.ico",
+    "placeholder": "assets/placeholder.jpg"
+  },
+  "seo": {
+    "title": "Moenia s.r.l. - Progettazione e Consulenza Architettonica",
+    "description": "Moenia s.r.l. - Specialisti in progettazione e consulenza integrata in ambito architettonico e ingegneristico. Soluzioni innovative e sostenibili.",
+    "keywords": "progettazione architettonica, consulenza ingegneristica, architettura, ingegneria, sostenibilità, Roma",
+    "author": "Moenia s.r.l.",
+    "og_image": "assets/og-image.jpg"
+  }
+} 
