@@ -21,6 +21,7 @@ class MoeniaSite {
         this.setupFooterVisibility();
         this.setupConfigLoader();
         this.setupIntersectionObserver();
+        this.setupStatisticsAnimation();
     }
     
     setupHeader() {
@@ -583,6 +584,60 @@ class MoeniaSite {
             teamMemberImage.style.zIndex = '1';
             teamMemberImage.style.position = 'relative';
         }
+    }
+    
+    setupStatisticsAnimation() {
+        // Animazione incremento numeri statistiche
+        const statNumbers = document.querySelectorAll('.stat-number-small');
+        
+        if (statNumbers.length === 0) return;
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const numberElement = entry.target;
+                    this.animateNumber(numberElement);
+                    observer.unobserve(numberElement);
+                }
+            });
+        }, {
+            threshold: 0.5,
+            rootMargin: '0px 0px -50px 0px'
+        });
+        
+        statNumbers.forEach(numberElement => {
+            observer.observe(numberElement);
+        });
+    }
+    
+    animateNumber(element) {
+        const finalNumber = parseInt(element.textContent.replace('+', ''));
+        const duration = 2000; // 2 secondi
+        const steps = 60;
+        const increment = finalNumber / steps;
+        let currentNumber = 0;
+        let step = 0;
+        
+        const timer = setInterval(() => {
+            step++;
+            currentNumber = Math.min(increment * step, finalNumber);
+            
+            if (element.textContent.includes('+')) {
+                element.textContent = Math.floor(currentNumber) + '+';
+            } else {
+                element.textContent = Math.floor(currentNumber);
+            }
+            
+            if (step >= steps) {
+                clearInterval(timer);
+                // Assicurati che il numero finale sia corretto
+                if (element.textContent.includes('+')) {
+                    element.textContent = finalNumber + '+';
+                } else {
+                    element.textContent = finalNumber;
+                }
+            }
+        }, duration / steps);
     }
 }
 

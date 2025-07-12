@@ -427,7 +427,7 @@ body {
 /* ===== ABOUT US SECTION ===== */
 .about-us {
     min-height: 100vh !important;
-    padding: var(--spacing-xxl) 0 !important;
+    padding: var(--spacing-lg) 0 var(--spacing-xxl) 0 !important;
     background: var(--background-secondary) !important;
 }
 
@@ -456,8 +456,9 @@ body {
 .section-title {
     font-size: var(--font-size-h2);
     color: var(--primary-color);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
     font-weight: 700;
+    text-align: center;
 }
 
 .section-description {
@@ -530,6 +531,191 @@ body {
     font-style: italic;
 }
 
+/* ===== STATISTICS SECTION ===== */
+/* Statistics are now integrated within the about-us section */
+.about-us .statistics {
+    background: linear-gradient(135deg, var(--background-secondary) 0%, #e8f4fd 100%);
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius-lg);
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+}
+
+.about-us .statistics::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="%23ffffff" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+    pointer-events: none;
+    border-radius: var(--border-radius-lg);
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-md);
+    text-align: center;
+    box-shadow: var(--shadow-light);
+    transition: all var(--transition-base);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    transform: scaleX(0);
+    transition: transform var(--transition-base);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.stat-card:hover::before {
+    transform: scaleX(1);
+}
+
+.stat-icon {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-sm);
+    transition: all var(--transition-base);
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.1);
+    color: var(--accent-color);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-xs);
+    line-height: 1;
+    transition: all var(--transition-base);
+}
+
+.stat-card:hover .stat-number {
+    color: var(--accent-color);
+    transform: scale(1.05);
+}
+
+.stat-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color var(--transition-base);
+}
+
+.stat-card:hover .stat-label {
+    color: var(--text-primary);
+}
+
+/* ===== SMALL STATISTICS CARDS ===== */
+.stat-card-small {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-sm);
+    text-align: center;
+    box-shadow: var(--shadow-light);
+    transition: all var(--transition-base);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 120px;
+    margin: 0 auto;
+}
+
+.stat-card-small::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    transform: scaleX(0);
+    transition: transform var(--transition-base);
+}
+
+.stat-card-small:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.stat-card-small:hover::before {
+    transform: scaleX(1);
+}
+
+.stat-icon-small {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-xs);
+    transition: all var(--transition-base);
+}
+
+.stat-card-small:hover .stat-icon-small {
+    transform: scale(1.1);
+    color: var(--accent-color);
+}
+
+.stat-number-small {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-xs);
+    line-height: 1;
+    transition: all var(--transition-base);
+}
+
+.stat-card-small:hover .stat-number-small {
+    color: var(--accent-color);
+    transform: scale(1.05);
+}
+
+.stat-label-small {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: color var(--transition-base);
+}
+
+.stat-card-small:hover .stat-label-small {
+    color: var(--text-primary);
+}
+
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
     :root {
@@ -594,7 +780,7 @@ body {
     .about-us-text {
         order: 2 !important;
         padding-right: 0 !important;
-        margin-bottom: var(--spacing-lg) !important;
+        margin-bottom: var(--spacing-xl) !important;
     }
     
     .about-us-card {
@@ -607,6 +793,19 @@ body {
     
     .team-member-card .member-image {
         height: 350px;
+    }
+    
+    .stat-card-small {
+        max-width: 100px;
+        padding: var(--spacing-xs);
+    }
+    
+    .stat-number-small {
+        font-size: 1.2rem;
+    }
+    
+    .stat-label-small {
+        font-size: 0.7rem;
     }
     
     .contacts {
@@ -685,12 +884,29 @@ body {
         padding: var(--spacing-lg) 0;
     }
     
+    .about-us-text {
+        margin-bottom: var(--spacing-lg) !important;
+    }
+    
     .team-member-card {
         max-width: 300px;
     }
     
     .team-member-card .member-image {
         height: 300px;
+    }
+    
+    .stat-card-small {
+        max-width: 80px;
+        padding: var(--spacing-xs);
+    }
+    
+    .stat-number-small {
+        font-size: 1rem;
+    }
+    
+    .stat-label-small {
+        font-size: 0.6rem;
     }
     
     .contacts {
