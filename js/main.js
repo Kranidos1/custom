@@ -17,6 +17,7 @@ class MoeniaSite {
         this.setupHeader();
         this.setupMobileMenu();
         this.setupSmoothScrolling();
+        this.setupSectionNavigation();
         this.setupConfigLoader();
         this.setupIntersectionObserver();
     }
@@ -130,16 +131,241 @@ class MoeniaSite {
                 const target = document.querySelector(href);
                 if (target) {
                     e.preventDefault();
-                    const headerHeight = this.header?.offsetHeight || 80;
-                    const targetPosition = target.offsetTop - headerHeight;
-                    
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
+                    this.scrollToSection(target);
                 }
             });
         });
+    }
+    
+    setupSectionNavigation() {
+        // Variabili per il controllo dello scroll
+        this.isScrolling = false;
+        this.currentSectionIndex = 0;
+        this.sections = [];
+        this.scrollThreshold = 50;
+        this.scrollCooldown = 1000;
+        this.sectionDots = [];
+        this.lastScrollTime = 0;
+        this.wheelNavigationEnabled = true;
+        
+        // Ottieni tutte le sezioni
+        this.sections = document.querySelectorAll('section[id]');
+        console.log('Sezioni trovate:', this.sections.length);
+        
+        // Verifica che le sezioni siano valide
+        if (this.sections.length === 0) {
+            console.warn('Nessuna sezione trovata! Verifica che le sezioni abbiano un ID.');
+            return;
+        }
+        
+        // Log delle sezioni trovate
+        this.sections.forEach((section, index) => {
+            console.log(`Sezione ${index}:`, section.id, section.offsetTop);
+        });
+        
+        // Setup indicatori delle sezioni
+        this.setupSectionIndicators();
+        
+        // Aggiungi event listener per lo scroll
+        window.addEventListener('scroll', () => {
+            this.handleSectionScroll();
+        });
+        
+        // Aggiungi event listener per tasti freccia e spazio
+        document.addEventListener('keydown', (e) => {
+            this.handleKeyboardNavigation(e);
+        });
+        
+        // Aggiungi event listener per wheel (mouse wheel)
+        document.addEventListener('wheel', (e) => {
+            this.handleWheelNavigation(e);
+        }, { passive: false });
+        
+        // Inizializza l'indicatore corrente
+        this.updateCurrentSection();
+    }
+    
+    setupSectionIndicators() {
+        const indicator = document.getElementById('sectionIndicator');
+        if (!indicator) {
+            console.log('Indicatore sezioni non trovato');
+            return;
+        }
+        
+        // Ottieni tutti i dots
+        this.sectionDots = indicator.querySelectorAll('.section-dot');
+        console.log('Dots trovati:', this.sectionDots.length);
+        
+        // Aggiungi event listener per click sui dots
+        this.sectionDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                const target = dot.getAttribute('data-target');
+                const section = document.querySelector(target);
+                if (section) {
+                    this.scrollToSection(section);
+                }
+            });
+        });
+    }
+    
+    updateSectionIndicator(activeIndex) {
+        if (!this.sectionDots || this.sectionDots.length === 0) {
+            console.warn('Nessun indicatore trovato');
+            return;
+        }
+        
+        this.sectionDots.forEach((dot, index) => {
+            if (index === activeIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+        
+        console.log('Indicatore aggiornato:', activeIndex);
+    }
+    
+    handleSectionScroll() {
+        if (this.isScrolling) return;
+        
+        const now = Date.now();
+        if (now - this.lastScrollTime < 100) return; // Debounce manuale
+        this.lastScrollTime = now;
+        
+        this.updateCurrentSection();
+    }
+    
+    updateCurrentSection() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight;
+        const currentSection = this.getCurrentSection(scrollTop, windowHeight);
+        
+        if (currentSection !== this.currentSectionIndex) {
+            this.currentSectionIndex = currentSection;
+            this.updateSectionIndicator(currentSection);
+            console.log('Sezione corrente:', currentSection);
+        }
+    }
+    
+    getCurrentSection(scrollTop, windowHeight) {
+        let currentIndex = 0;
+        
+        this.sections.forEach((section, index) => {
+            const sectionTop = section.offsetTop;
+            const sectionBottom = sectionTop + section.offsetHeight;
+            const threshold = windowHeight * 0.4; // 40% della viewport
+            
+            if (scrollTop >= sectionTop - threshold && 
+                scrollTop < sectionBottom - threshold) {
+                currentIndex = index;
+            }
+        });
+        
+        return currentIndex;
+    }
+    
+    handleKeyboardNavigation(e) {
+        if (this.isScrolling) return;
+        
+        switch(e.key) {
+            case 'ArrowDown':
+            case 'PageDown':
+            case ' ':
+                e.preventDefault();
+                this.scrollToNextSection();
+                break;
+            case 'ArrowUp':
+            case 'PageUp':
+                e.preventDefault();
+                this.scrollToPreviousSection();
+                break;
+            case 'Home':
+                e.preventDefault();
+                this.scrollToSection(this.sections[0]);
+                break;
+            case 'End':
+                e.preventDefault();
+                this.scrollToSection(this.sections[this.sections.length - 1]);
+                break;
+        }
+    }
+    
+    handleWheelNavigation(e) {
+        // Non interferire se stiamo già scrollando programmaticamente
+        if (this.isScrolling) {
+            return;
+        }
+        
+        // Se la navigazione automatica è disabilitata, non interferire
+        if (!this.wheelNavigationEnabled) {
+            return;
+        }
+        
+        const now = Date.now();
+        
+        // Cooldown per evitare scroll multipli
+        if (now - this.lastScrollTime < 800) {
+            return;
+        }
+        
+        // Determina la direzione dello scroll
+        const isScrollingDown = e.deltaY > 0;
+        const isScrollingUp = e.deltaY < 0;
+        
+        // Solo se lo scroll è significativo
+        if (Math.abs(e.deltaY) < 50) {
+            return;
+        }
+        
+        // Previeni il comportamento di default
+        e.preventDefault();
+        this.lastScrollTime = now;
+        
+        // Naviga alla sezione successiva o precedente
+        if (isScrollingDown) {
+            this.scrollToNextSection();
+        } else if (isScrollingUp) {
+            this.scrollToPreviousSection();
+        }
+    }
+    
+    scrollToNextSection() {
+        if (this.currentSectionIndex < this.sections.length - 1) {
+            const nextSection = this.sections[this.currentSectionIndex + 1];
+            if (nextSection) {
+                this.scrollToSection(nextSection);
+                console.log('Scrolling to next section:', this.currentSectionIndex + 1);
+            }
+        }
+    }
+    
+    scrollToPreviousSection() {
+        if (this.currentSectionIndex > 0) {
+            const prevSection = this.sections[this.currentSectionIndex - 1];
+            if (prevSection) {
+                this.scrollToSection(prevSection);
+                console.log('Scrolling to previous section:', this.currentSectionIndex - 1);
+            }
+        }
+    }
+    
+    scrollToSection(section) {
+        if (this.isScrolling) return;
+        if (!section) return;
+        
+        this.isScrolling = true;
+        const headerHeight = this.header?.offsetHeight || 80;
+        const targetPosition = Math.max(0, section.offsetTop - headerHeight);
+        
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
+        
+        // Reset del flag di scrolling dopo l'animazione
+        setTimeout(() => {
+            this.isScrolling = false;
+        }, 1200); // Aumentato per dare più tempo all'animazione
     }
     
     async setupConfigLoader() {
@@ -227,6 +453,22 @@ class MoeniaSite {
         };
     }
     
+    // Metodo per testare se tutto funziona
+    testSectionNavigation() {
+        console.log('Test navigazione sezioni:');
+        console.log('- Sezioni trovate:', this.sections.length);
+        console.log('- Dots trovati:', this.sectionDots.length);
+        console.log('- Sezione corrente:', this.currentSectionIndex);
+        console.log('- Header height:', this.header?.offsetHeight);
+        console.log('- Wheel navigation enabled:', this.wheelNavigationEnabled);
+    }
+    
+    // Metodo per abilitare/disabilitare la navigazione automatica
+    toggleWheelNavigation() {
+        this.wheelNavigationEnabled = !this.wheelNavigationEnabled;
+        console.log('Wheel navigation:', this.wheelNavigationEnabled ? 'enabled' : 'disabled');
+    }
+    
     // Gestione errori immagini
     setupImageErrorHandling() {
         const images = document.querySelectorAll('img');
@@ -252,6 +494,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Setup error handling per immagini
     site.setupImageErrorHandling();
+    
+    // Test della navigazione sezioni dopo un breve delay
+    setTimeout(() => {
+        site.testSectionNavigation();
+    }, 1000);
 });
 
 // CSS per menu mobile (aggiunto dinamicamente se necessario)
