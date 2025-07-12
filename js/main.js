@@ -18,6 +18,7 @@ class MoeniaSite {
         this.setupMobileMenu();
         this.setupSmoothScrolling();
         this.setupSectionNavigation();
+        this.setupFooterVisibility();
         this.setupConfigLoader();
         this.setupIntersectionObserver();
     }
@@ -47,6 +48,30 @@ class MoeniaSite {
             this.header.classList.add('scrolled');
         } else {
             this.header.classList.remove('scrolled');
+        }
+        
+        // Gestisci visibilità del footer
+        this.updateFooterVisibility(scrollTop, heroHeight);
+    }
+    
+    setupFooterVisibility() {
+        this.footer = document.querySelector('.footer');
+        if (!this.footer) return;
+        
+        // Inizializza la visibilità del footer
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const heroHeight = document.querySelector('.hero-carousel')?.offsetHeight || 600;
+        this.updateFooterVisibility(scrollTop, heroHeight);
+    }
+    
+    updateFooterVisibility(scrollTop, heroHeight) {
+        if (!this.footer) return;
+        
+        // Nascondi il footer nel carousel (primi 80% dell'altezza del carousel)
+        if (scrollTop < heroHeight * 0.8) {
+            this.footer.classList.add('hidden');
+        } else {
+            this.footer.classList.remove('hidden');
         }
     }
     
