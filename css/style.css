@@ -394,11 +394,15 @@ body {
 .carousel-indicators {
     position: absolute;
     bottom: var(--spacing-lg);
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
     display: flex;
     gap: var(--spacing-sm);
     z-index: var(--z-carousel-controls);
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
 }
 
 .carousel-indicator {
@@ -668,6 +672,12 @@ body {
     
     .carousel-indicators {
         bottom: var(--spacing-md);
+        left: 0;
+        right: 0;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin: 0 auto;
     }
     
     .about-us {
