@@ -221,13 +221,26 @@ class MoeniaSite {
         this.sectionDots = indicator.querySelectorAll('.section-dot');
         console.log('Dots trovati:', this.sectionDots.length);
         
+        // Debug: verifica che i target corrispondano alle sezioni
+        this.sectionDots.forEach((dot, index) => {
+            const target = dot.getAttribute('data-target');
+            const section = document.querySelector(target);
+            console.log(`Dot ${index}:`, target, section ? '✓' : '✗');
+        });
+        
         // Aggiungi event listener per click sui dots
         this.sectionDots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
+            dot.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
                 const target = dot.getAttribute('data-target');
                 const section = document.querySelector(target);
                 if (section) {
+                    console.log('Click on indicator:', index, target);
                     this.scrollToSection(section);
+                } else {
+                    console.warn('Section not found:', target);
                 }
             });
         });
@@ -268,7 +281,7 @@ class MoeniaSite {
         if (currentSection !== this.currentSectionIndex) {
             this.currentSectionIndex = currentSection;
             this.updateSectionIndicator(currentSection);
-            console.log('Sezione corrente:', currentSection);
+            console.log('Sezione corrente:', currentSection, 'Scroll position:', scrollTop);
         }
     }
     
@@ -381,6 +394,14 @@ class MoeniaSite {
         this.isScrolling = true;
         const headerHeight = this.header?.offsetHeight || 80;
         const targetPosition = Math.max(0, section.offsetTop - headerHeight);
+        
+        // Aggiorna l'indice della sezione corrente
+        const sectionIndex = Array.from(this.sections).indexOf(section);
+        if (sectionIndex !== -1) {
+            this.currentSectionIndex = sectionIndex;
+            this.updateSectionIndicator(sectionIndex);
+            console.log('Scrolling to section:', sectionIndex, section.id);
+        }
         
         window.scrollTo({
             top: targetPosition,
