@@ -25,8 +25,17 @@ class HeroCarousel {
         this.createSlides();
         this.createIndicators();
         this.bindEvents();
+        // Attiva manualmente la prima slide
+        if (this.slides.length > 0) {
+            this.slides[0].classList.add('active');
+            this.slides[0].setAttribute('aria-hidden', 'false');
+            if (this.indicators.length > 0) {
+                this.indicators[0].classList.add('active');
+                this.indicators[0].setAttribute('aria-selected', 'true');
+            }
+        }
+        
         this.startAutoplay();
-        this.showSlide(0);
     }
     
     async loadConfig() {
