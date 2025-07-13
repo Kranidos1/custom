@@ -1,6 +1,7 @@
 /**
  * Moenia s.r.l. - Hero Carousel
  * Gestisce il carousel principale con autoplay e controlli manuali
+ * Ottimizzato per caricamento veloce delle immagini
  */
 
 class HeroCarousel {
@@ -11,12 +12,15 @@ class HeroCarousel {
         this.autoplayInterval = null;
         this.autoplayDelay = 5000; // 5 secondi
         this.isTransitioning = false;
+        this.loadedImages = new Set(); // Traccia le immagini caricate
+        this.imageCache = new Map(); // Cache per le immagini pre-caricate
         
         this.init();
     }
     
     init() {
         this.loadConfig();
+        this.preloadCriticalImages();
         this.createSlides();
         this.createIndicators();
         this.bindEvents();
@@ -91,6 +95,57 @@ class HeroCarousel {
         console.log('Using hardcoded carousel data:', this.config);
     }
     
+    // Preload delle immagini critiche (prime 3)
+    preloadCriticalImages() {
+        const criticalSlides = this.config.carousel.slides.slice(0, 3);
+        
+        // Carica la prima immagine immediatamente
+        if (criticalSlides[0]) {
+            this.preloadImage(criticalSlides[0].image, 0);
+        }
+        
+        // Carica le altre due immagini critiche in parallelo
+        Promise.all([
+            criticalSlides[1] ? this.preloadImage(criticalSlides[1].image, 1) : Promise.resolve(),
+            criticalSlides[2] ? this.preloadImage(criticalSlides[2].image, 2) : Promise.resolve()
+        ]).then(() => {
+            console.log('Critical images loaded successfully');
+        });
+        
+        // Preload delle immagini successive in background con priorità
+        setTimeout(() => {
+            const remainingSlides = this.config.carousel.slides.slice(3);
+            remainingSlides.forEach((slideData, index) => {
+                // Aggiungi un piccolo delay per non sovraccaricare la connessione
+                setTimeout(() => {
+                    this.preloadImage(slideData.image, index + 3);
+                }, index * 200);
+            });
+        }, 1500);
+    }
+    
+    // Preload di una singola immagine
+    preloadImage(imageUrl, index) {
+        if (this.loadedImages.has(imageUrl)) {
+            return Promise.resolve();
+        }
+        
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+                this.loadedImages.add(imageUrl);
+                this.imageCache.set(index, img);
+                console.log(`Image preloaded successfully: ${imageUrl}`);
+                resolve();
+            };
+            img.onerror = () => {
+                console.error(`Failed to preload image: ${imageUrl}`);
+                reject();
+            };
+            img.src = imageUrl;
+        });
+    }
+    
     createSlides() {
         const slidesContainer = document.getElementById('carouselSlides');
         if (!slidesContainer) {
@@ -103,11 +158,33 @@ class HeroCarousel {
         this.config.carousel.slides.forEach((slideData, index) => {
             const slide = document.createElement('div');
             slide.className = 'carousel-slide';
-            slide.style.backgroundImage = `url(${slideData.image})`;
-            console.log(`Setting background image for slide ${index + 1}:`, slideData.image);
             slide.setAttribute('aria-hidden', index !== 0);
             slide.setAttribute('role', 'tabpanel');
             slide.setAttribute('aria-label', `Slide ${index + 1} di ${this.config.carousel.slides.length}`);
+            
+            // Aggiungi classe di caricamento
+            slide.classList.add('loading');
+            
+            // Imposta l'immagine di sfondo solo se è già caricata
+            if (this.loadedImages.has(slideData.image)) {
+                slide.style.backgroundImage = `url(${slideData.image})`;
+                slide.classList.remove('loading');
+            } else {
+                // Fallback con colore di sfondo durante il caricamento
+                slide.style.backgroundColor = '#2c5aa0';
+                
+                // Carica l'immagine e aggiorna quando pronta
+                this.preloadImage(slideData.image, index).then(() => {
+                    slide.style.backgroundImage = `url(${slideData.image})`;
+                    slide.classList.remove('loading');
+                    // Aggiungi una transizione fluida per l'immagine appena caricata
+                    slide.style.transition = 'background-image 0.3s ease-in-out';
+                }).catch(() => {
+                    // Mantieni il colore di fallback se il caricamento fallisce
+                    slide.classList.remove('loading');
+                    console.warn(`Failed to load image for slide ${index + 1}: ${slideData.image}`);
+                });
+            }
             
             const content = document.createElement('div');
             content.className = 'carousel-content';
@@ -129,19 +206,6 @@ class HeroCarousel {
             content.appendChild(subtitle);
             content.appendChild(cta);
             slide.appendChild(content);
-            
-            // Verifica che l'immagine esista
-            const img = new Image();
-            img.onload = () => {
-                console.log(`Image loaded successfully: ${slideData.image}`);
-            };
-            img.onerror = () => {
-                console.error(`Failed to load image: ${slideData.image}`);
-                // Fallback: usa un colore di sfondo
-                slide.style.backgroundImage = 'none';
-                slide.style.backgroundColor = '#2c5aa0';
-            };
-            img.src = slideData.image;
             
             slidesContainer.appendChild(slide);
             this.slides.push(slide);
@@ -237,6 +301,12 @@ class HeroCarousel {
         
         this.isTransitioning = true;
         
+        // Preload dell'immagine della prossima slide se non è ancora caricata
+        const nextSlideData = this.config.carousel.slides[index];
+        if (!this.loadedImages.has(nextSlideData.image)) {
+            this.preloadImage(nextSlideData.image, index);
+        }
+        
         // Nascondi slide corrente
         this.slides[this.currentSlide].classList.remove('active');
         this.slides[this.currentSlide].setAttribute('aria-hidden', 'true');
@@ -250,6 +320,9 @@ class HeroCarousel {
         this.indicators[this.currentSlide].classList.add('active');
         this.indicators[this.currentSlide].setAttribute('aria-selected', 'true');
         
+        // Preload delle prossime 2 immagini in background
+        this.preloadNextImages(index);
+        
         // Reset autoplay
         this.resetAutoplay();
         
@@ -257,6 +330,21 @@ class HeroCarousel {
         setTimeout(() => {
             this.isTransitioning = false;
         }, 500);
+    }
+    
+    // Preload delle prossime immagini per transizioni più fluide
+    preloadNextImages(currentIndex) {
+        const nextIndices = [
+            (currentIndex + 1) % this.slides.length,
+            (currentIndex + 2) % this.slides.length
+        ];
+        
+        nextIndices.forEach(index => {
+            const slideData = this.config.carousel.slides[index];
+            if (!this.loadedImages.has(slideData.image)) {
+                this.preloadImage(slideData.image, index);
+            }
+        });
     }
     
     nextSlide() {

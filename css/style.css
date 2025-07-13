@@ -275,7 +275,7 @@ body {
     width: 100%;
     height: 100%;
     opacity: 0;
-    transition: opacity var(--transition-slow);
+    transition: opacity 0.4s ease-in-out;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -283,6 +283,34 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 5;
+    will-change: opacity;
+    transform: translateZ(0); /* Forza hardware acceleration */
+}
+
+/* Stato di caricamento per le immagini */
+.carousel-slide.loading {
+    background-color: #2c5aa0;
+    background-image: none;
+}
+
+.carousel-slide.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 10;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 .carousel-slide.active {
@@ -356,6 +384,7 @@ body {
 .carousel-slide.active .carousel-cta {
     opacity: 1;
     transform: translateY(0);
+    will-change: opacity, transform;
 }
 
 /* Carousel Controls */
