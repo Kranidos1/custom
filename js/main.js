@@ -120,25 +120,28 @@ class MoeniaSite {
         this.mobileMenuToggle.classList.add('active');
         this.mobileMenuToggle.setAttribute('aria-expanded', 'true');
         
-        // Forza il background inline per debug
-        this.nav.style.background = '#002b49 !important';
-        this.nav.style.position = 'fixed !important';
-        this.nav.style.top = '0 !important';
-        this.nav.style.left = '0 !important';
-        this.nav.style.right = '0 !important';
-        this.nav.style.bottom = '0 !important';
-        this.nav.style.zIndex = '9999 !important';
-        
-        // Animazione hamburger
-        const lines = this.mobileMenuToggle.querySelectorAll('.hamburger-line');
-        lines[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-        lines[1].style.opacity = '0';
-        lines[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
-        
         // Blocca scroll del body
         document.body.style.overflow = 'hidden';
         
-        console.log('Mobile menu opened, nav classes:', this.nav.className);
+        // Debug: verifica che i pulsanti siano visibili
+        setTimeout(() => {
+            const navItems = this.nav.querySelectorAll('.nav-item');
+            const navLinks = this.nav.querySelectorAll('.nav-link');
+            console.log('Nav items found:', navItems.length);
+            console.log('Nav links found:', navLinks.length);
+            
+            navItems.forEach((item, index) => {
+                const computedStyle = window.getComputedStyle(item);
+                console.log(`Nav item ${index + 1}:`, {
+                    opacity: computedStyle.opacity,
+                    visibility: computedStyle.visibility,
+                    display: computedStyle.display,
+                    zIndex: computedStyle.zIndex
+                });
+            });
+        }, 100);
+        
+        console.log('Mobile menu opened with new styling');
     }
     
     closeMobileMenu() {
@@ -147,25 +150,10 @@ class MoeniaSite {
         this.mobileMenuToggle.classList.remove('active');
         this.mobileMenuToggle.setAttribute('aria-expanded', 'false');
         
-        // Pulisci gli stili inline
-        this.nav.style.background = '';
-        this.nav.style.position = '';
-        this.nav.style.top = '';
-        this.nav.style.left = '';
-        this.nav.style.right = '';
-        this.nav.style.bottom = '';
-        this.nav.style.zIndex = '';
-        
-        // Reset animazione hamburger
-        const lines = this.mobileMenuToggle.querySelectorAll('.hamburger-line');
-        lines[0].style.transform = 'none';
-        lines[1].style.opacity = '1';
-        lines[2].style.transform = 'none';
-        
         // Ripristina scroll del body
         document.body.style.overflow = '';
         
-        console.log('Mobile menu closed, nav classes:', this.nav.className);
+        console.log('Mobile menu closed with new styling');
     }
     
     setupSmoothScrolling() {
