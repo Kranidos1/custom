@@ -68,7 +68,13 @@ class MoeniaSite {
     updateFooterVisibility(scrollTop, heroHeight) {
         if (!this.footer) return;
         
-        // Nascondi il footer nel carousel (primi 80% dell'altezza del carousel)
+        // Su mobile, il footer rimane sempre visibile
+        if (window.innerWidth <= 768) {
+            this.footer.classList.remove('hidden');
+            return;
+        }
+        
+        // Su desktop, nascondi il footer solo nella sezione del carousel (primi 80% dell'altezza del carousel)
         if (scrollTop < heroHeight * 0.8) {
             this.footer.classList.add('hidden');
         } else {

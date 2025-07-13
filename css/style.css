@@ -1728,6 +1728,14 @@ body {
     transform: translateY(100%);
 }
 
+/* Su mobile, il footer rimane sempre visibile */
+@media (max-width: 768px) {
+    .footer.hidden {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .footer-content {
     display: flex !important;
     justify-content: space-between !important;
