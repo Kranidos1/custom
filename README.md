@@ -1,209 +1,144 @@
-# Moenia s.r.l. - Sito Web
+# Moenia s.r.l. - Sito Web Aziendale
 
-Sito statico professionale per **Moenia s.r.l.**, società specializzata in progettazione e consulenza integrata in ambito architettonico e ingegneristico.
+Sito web professionale per Moenia s.r.l., specializzata in progettazione e consulenza architettonica e ingegneristica.
 
-## 🏗️ Caratteristiche
+## 🚀 Ottimizzazioni per GitHub Pages
 
-- **Header trasparente/solido** con transizione fluida
-- **Hero carousel** con autoplay e controlli manuali
-- **Design responsive** per tutti i dispositivi
-- **Accessibilità** completa con supporto ARIA
-- **Performance ottimizzate** con lazy loading
-- **Configurazione centralizzata** tramite JSON
+### Performance Implementate
 
-## 📁 Struttura del Progetto
+#### 1. **Preconnect e DNS Prefetch**
+```html
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+```
+
+#### 2. **Preload delle Immagini Critiche**
+- Logo aziendale e immagini essenziali
+- Prime 2 immagini del carousel per LCP ottimale
+- Formato corretto specificato per ogni immagine
+
+#### 3. **Carousel Ottimizzato**
+- Preload limitato alle prime 2-3 immagini critiche
+- Caricamento progressivo delle immagini successive
+- Versioni responsive per mobile e desktop
+- Debounce per aggiornamenti responsive
+
+#### 4. **Immagini Locali Ottimizzate**
+- Immagini WebP locali in `assets/carousel/`
+- Sfrutta il CDN di GitHub Pages (Fastly)
+- Nessuna dipendenza da servizi esterni
+- Lazy loading per immagini non critiche
+
+### 🎯 Metriche di Performance Target
+
+- **LCP (Largest Contentful Paint)**: < 2.5s
+- **FID (First Input Delay)**: < 100ms
+- **CLS (Cumulative Layout Shift)**: < 0.1
+- **Caricamento iniziale**: < 3s su 3G
+
+### 📁 Struttura del Progetto
 
 ```
 custom/
-├── index.html              # Pagina principale
-├── css/
-│   └── style.css          # Stili principali con CSS Variables
-├── js/
-│   ├── carousel.js        # Logica del carousel hero
-│   └── main.js           # Funzionalità generali del sito
-├── data/
-│   └── config.json       # Configurazione centralizzata
 ├── assets/
-│   ├── logo_moenia.png   # Logo aziendale
-│   ├── carousel/         # Immagini del carousel hero
-│   │   ├── 1.png
-│   │   ├── 2.jpg
-│   │   ├── 3.jpg
-│   │   ├── 4.jpg
-│   │   ├── 5.jpg
-│   │   ├── 6.jpg
-│   │   ├── 7.jpg
-│   │   └── 8.jpg
-│   └── chi-siamo-image.jpg
-└── README.md
+│   ├── certificazioni/          # PDF delle certificazioni
+│   ├── logo_certificazioni/     # Loghi delle autorità
+│   ├── logo_moenia.png         # Logo principale
+│   ├── logo_moenia_footer.png  # Logo footer
+│   └── profile_pic.jpg         # Foto team
+├── css/
+│   └── style.css               # Stili ottimizzati
+├── js/
+│   ├── carousel.js             # Carousel con preload intelligente
+│   └── main.js                 # Funzionalità principali
+└── index.html                  # Pagina principale ottimizzata
 ```
 
-## 🚀 Funzionalità Principali
+### 🔧 Configurazione GitHub Pages
 
-### Header Intelligente
-- **Trasparente** quando sopra al carousel
-- **Solido** con blur effect durante lo scroll
-- **Sticky** sempre visibile in cima
-- **Responsive** con menu hamburger mobile
+1. **Abilita GitHub Pages**:
+   - Vai su Settings > Pages
+   - Source: Deploy from a branch
+   - Branch: main
+   - Folder: / (root)
 
-### Hero Carousel
-- **Autoplay** ogni 5 secondi
-- **Controlli manuali** (frecce + pallini)
-- **Navigazione touch/swipe** su mobile
-- **Transizioni fade** fluide
-- **Pause on hover** per UX migliore
-
-### Sezione "Chi Siamo"
-- **Layout a griglia** responsive
-- **Animazioni al scroll** con Intersection Observer
-- **Icone SVG** integrate
-- **Contenuti configurabili** via JSON
-
-## 🎨 Personalizzazione
-
-### Colori e Stili
-Tutti i colori e gli stili sono definiti in variabili CSS nel file `css/style.css`:
-
-```css
-:root {
-    --primary-color: #2c5aa0;
-    --secondary-color: #1e3a5f;
-    --accent-color: #f39c12;
-    /* ... altri colori */
-}
-```
-
-### Contenuti
-I contenuti sono configurabili tramite il file `data/config.json`:
-
-```json
-{
-  "carousel": {
-    "slides": [
-      {
-        "image": "assets/slide-1.jpg",
-        "title": "Progettazione Architettonica",
-        "subtitle": "Soluzioni innovative...",
-        "cta": "Scopri i nostri progetti",
-        "cta_url": "#progetti"
-      }
-    ]
-  }
-}
-```
-
-## 📱 Responsive Design
-
-Il sito è completamente responsive con breakpoint ottimizzati:
-
-- **Desktop**: > 768px
-- **Tablet**: 768px - 480px  
-- **Mobile**: < 480px
-
-### Funzionalità Mobile
-- Menu hamburger animato
-- Touch/swipe per carousel
-- Layout ottimizzato per schermi piccoli
-- Performance ottimizzate
-
-## ♿ Accessibilità
-
-- **Attributi ARIA** completi
-- **Navigazione da tastiera** supportata
-- **Screen reader** friendly
-- **High contrast mode** supportato
-- **Reduced motion** rispettato
-
-## ⚡ Performance
-
-- **Lazy loading** per immagini
-- **CSS Variables** per ottimizzazione
-- **JavaScript modulare** e efficiente
-- **Debounced scroll handlers**
-- **Intersection Observer** per animazioni
-
-## 🛠️ Tecnologie Utilizzate
-
-- **HTML5** semantico
-- **CSS3** con Grid/Flexbox
-- **JavaScript ES6+** vanilla
-- **CSS Variables** per theming
-- **Intersection Observer API**
-- **Touch Events** per mobile
-
-## 📋 Installazione e Deploy
-
-### Sviluppo Locale
-1. Clona il repository
-2. Apri `index.html` in un browser
-3. Oppure usa un server locale:
-   ```bash
-   python -m http.server 8000
-   # o
-   npx serve .
+2. **URL del sito**:
+   ```
+   https://tuo-username.github.io/tuo-repo/
    ```
 
-### Deploy su GitHub Pages
-1. Pusha il codice su GitHub
-2. Vai su Settings > Pages
-3. Seleziona branch `main` e cartella `/`
-4. Il sito sarà disponibile su `https://username.github.io/repository`
+3. **CDN jsDelivr** (opzionale):
+   ```html
+   https://cdn.jsdelivr.net/gh/USERNAME/REPO@main/assets/image.jpg
+   ```
 
-### Personalizzazione per Produzione
-1. Sostituisci le immagini placeholder in `assets/`
-2. Modifica i contenuti in `data/config.json`
-3. Aggiorna i colori in `css/style.css` se necessario
-4. Testa su diversi dispositivi
+### 📱 Responsive Design
 
-## 🔧 Configurazione Avanzata
+- **Mobile**: ≤ 768px
+- **Tablet**: 769px - 1024px  
+- **Desktop**: > 1024px
 
-### Aggiungere Nuove Slide
-Modifica `data/config.json`:
+### 🎨 Caratteristiche
 
-```json
-{
-  "carousel": {
-    "slides": [
-      {
-        "image": "assets/nuova-slide.jpg",
-        "title": "Nuovo Titolo",
-        "subtitle": "Nuova descrizione",
-        "cta": "Nuovo CTA",
-        "cta_url": "#nuova-sezione"
-      }
-    ]
-  }
-}
-```
+- **Design moderno** con glassmorphism
+- **Carousel dinamico** con 8 immagini
+- **Sezione certificazioni** con PDF scaricabili
+- **Navigazione fluida** senza scroll snapping
+- **Footer elegante** con informazioni aziendali
 
-### Modificare i Colori
-Aggiorna le variabili CSS in `css/style.css`:
+### ⚡ Ottimizzazioni Tecniche
 
-```css
-:root {
-    --primary-color: #nuovo-colore;
-    --accent-color: #nuovo-accent;
-}
-```
+#### Carousel
+- Preload intelligente delle immagini critiche
+- Transizioni fluide con CSS transforms
+- Effetti di parallax e zoom
+- Touch/swipe support per mobile
 
-### Aggiungere Nuove Sezioni
-1. Aggiungi HTML in `index.html`
-2. Definisci stili in `css/style.css`
-3. Aggiungi contenuti in `data/config.json`
+#### Immagini
+- Formato WebP per carousel (locali)
+- Sfrutta CDN di GitHub Pages (Fastly)
+- Immagini ottimizzate per tutti i dispositivi
+- Lazy loading per performance
 
-## 📞 Supporto
+#### CSS
+- Variabili CSS per consistenza
+- Animazioni hardware-accelerated
+- Media queries ottimizzate
+- Transizioni fluide
 
-Per modifiche o personalizzazioni:
-1. Modifica i file di configurazione
-2. Aggiorna contenuti e immagini
-3. Testa su diversi dispositivi
-4. Deploy su GitHub Pages
+### 🚀 Deployment
 
-## 📄 Licenza
+1. **Push su GitHub**:
+   ```bash
+   git add .
+   git commit -m "Ottimizzazioni performance per GitHub Pages"
+   git push origin main
+   ```
 
-Questo progetto è stato creato per Moenia s.r.l. ed è proprietà dell'azienda.
+2. **Verifica deployment**:
+   - GitHub Actions > Pages build and deployment
+   - Controlla l'URL del sito
+
+3. **Test performance**:
+   - Google PageSpeed Insights
+   - GTmetrix
+   - WebPageTest
+
+### 📊 Monitoraggio
+
+Monitora le performance con:
+- **Google Analytics** (se configurato)
+- **Core Web Vitals** in Search Console
+- **Lighthouse** per audit periodici
+
+### 🔄 Manutenzione
+
+- Aggiorna regolarmente le immagini del carousel
+- Monitora le metriche di performance
+- Ottimizza le immagini nuove prima del caricamento
+- Mantieni aggiornate le dipendenze
 
 ---
 
 **Moenia s.r.l.** - Progettazione e Consulenza Architettonica
-*Soluzioni innovative per il futuro dell'edilizia* 
+*Sostenibilità, Innovazione, Eccellenza* 

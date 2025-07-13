@@ -17,12 +17,17 @@
     <link rel="stylesheet" href="css/style.css">
     
     <!-- Preload critical images -->
-    <link rel="preload" href="assets/logo_moenia.png" as="image" type="image/svg+xml">
+    <link rel="preload" href="assets/logo_moenia.png" as="image" type="image/png">
     <link rel="preload" href="assets/logo_moenia_footer.png" as="image" type="image/png">
     <link rel="preload" href="assets/profile_pic.jpg" as="image" type="image/jpeg">
     
-    <link rel="preconnect" href="https://i.imgur.com" crossorigin>
-    <link rel="dns-prefetch" href="https://i.imgur.com">
+    <!-- Preload prime 2 immagini critiche del carousel -->
+    <link rel="preload" href="assets/carousel/1.webp" as="image" type="image/webp">
+    <link rel="preload" href="assets/carousel/2.webp" as="image" type="image/webp">
+    
+    <!-- Preconnect per CDN e performance -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 </head>
 <body>
     <!-- Header -->
@@ -162,7 +167,12 @@
                 <div class="col-lg-6 about-us-card">
                     <div class="team-member-card">
                         <div class="member-image">
-                            <img src="assets/profile_pic.jpg" alt="Membro del team Moenia" loading="lazy" class="img-fluid">
+                            <img src="assets/profile_pic.jpg" 
+                                 alt="Membro del team Moenia" 
+                                 loading="lazy" 
+                                 class="img-fluid"
+                                 srcset="assets/profile_pic.jpg 1x, assets/profile_pic.jpg 2x"
+                                 sizes="(max-width: 768px) 100vw, 50vw">
                         </div>
                         <div class="member-info">
                             <h3 class="member-name">Pasquale Rossi</h3>

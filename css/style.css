@@ -398,7 +398,6 @@ body {
     width: 100%;
     height: 100%;
     opacity: 0;
-    transition: opacity 0.4s ease-in-out;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -406,8 +405,6 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 5;
-    will-change: opacity;
-    transform: translateZ(0); /* Forza hardware acceleration */
 }
 
 /* Stato di caricamento per le immagini */
@@ -438,6 +435,11 @@ body {
 
 .carousel-slide.active {
     opacity: 1;
+}
+
+.carousel-slide:not(.active) {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .carousel-slide::before {
@@ -570,6 +572,18 @@ body {
 .carousel-indicator.active {
     background: var(--accent-color);
     transform: scale(1.2);
+    animation: indicatorPulse 2s ease-in-out infinite;
+}
+
+@keyframes indicatorPulse {
+    0%, 100% {
+        transform: scale(1.2);
+        box-shadow: 0 0 0 0 rgba(230, 126, 34, 0.7);
+    }
+    50% {
+        transform: scale(1.3);
+        box-shadow: 0 0 0 8px rgba(230, 126, 34, 0);
+    }
 }
 
 .carousel-indicator:hover {

@@ -14,6 +14,7 @@ class HeroCarousel {
         this.isTransitioning = false;
         this.loadedImages = new Set(); // Traccia le immagini caricate
         this.imageCache = new Map(); // Cache per le immagini pre-caricate
+        this.resizeTimeout = null; // Timeout per il debounce del resize
         
         // Inizializza in modo asincrono
         this.init().catch(error => {
@@ -37,56 +38,56 @@ class HeroCarousel {
             carousel: {
                 slides: [
                     {
-                        image: "https://i.imgur.com/27ULXku_d.webp?maxwidth=760&fidelity=grand",
+                        image: "assets/carousel/1.webp",
                         title: "Progettazione Architettonica",
                         subtitle: "Soluzioni innovative per il futuro dell'edilizia",
                         cta: "Scopri i nostri progetti",
                         ctaUrl: "#progetti"
                     },
                     {
-                        image: "https://i.imgur.com/5jPafmo_d.webp?maxwidth=760&fidelity=grand",
+                        image: "assets/carousel/2.webp",
                         title: "Consulenza Ingegneristica",
                         subtitle: "Competenza tecnica al servizio dell'innovazione",
                         cta: "I nostri servizi",
                         ctaUrl: "#servizi"
                     },
                     {
-                        image: "https://i.imgur.com/KcmTnZo_d.webp?maxwidth=760&fidelity=grand",
+                        image: "assets/carousel/3.webp",
                         title: "Sostenibilità",
                         subtitle: "Progetti eco-compatibili per un futuro migliore",
                         cta: "Contattaci",
                         ctaUrl: "#contatti"
                     },
                     {
-                        image: "https://i.imgur.com/W64I68o_d.webp?maxwidth=760&fidelity=grand",
+                        image: "assets/carousel/4.webp",
                         title: "Innovazione Tecnologica",
                         subtitle: "Tecnologie all'avanguardia per progetti di eccellenza",
                         cta: "Scopri di più",
                         ctaUrl: "#servizi"
                     },
                     {
-                        image: "https://i.imgur.com/OSyZhnx_d.webp?maxwidth=760&fidelity=grand",
+                        image: "assets/carousel/5.webp",
                         title: "Design Sostenibile",
                         subtitle: "Architettura che rispetta l'ambiente e il futuro",
                         cta: "I nostri progetti green",
                         ctaUrl: "#progetti"
                     },
                     {
-                        image: "https://i.imgur.com/ilsL1Wf_d.webp?maxwidth=760&fidelity=grand",
+                        image: "assets/carousel/6.webp",
                         title: "Eccellenza Progettuale",
                         subtitle: "Qualità e precisione in ogni dettaglio",
                         cta: "Conosci il nostro team",
                         ctaUrl: "#chi-siamo"
                     },
                     {
-                        image: "https://i.imgur.com/MmeJRaj_d.webp?maxwidth=760&fidelity=grand",
+                        image: "assets/carousel/7.webp",
                         title: "Soluzioni Personalizzate",
                         subtitle: "Ogni progetto è unico, ogni soluzione è su misura",
                         cta: "Inizia il tuo progetto",
                         ctaUrl: "#contatti"
                     },
                     {
-                        image: "https://i.imgur.com/I03FS8x_d.webp?maxwidth=760&fidelity=grand",
+                        image: "assets/carousel/8.webp",
                         title: "Visione del Futuro",
                         subtitle: "Progettiamo oggi gli spazi di domani",
                         cta: "Collabora con noi",
@@ -98,33 +99,18 @@ class HeroCarousel {
         console.log('Using hardcoded carousel data:', this.config);
     }
     
-    // Preload delle immagini critiche (prime 3)
+    // Preload solo della prima immagine
     async preloadCriticalImages() {
-        const criticalSlides = this.config.carousel.slides.slice(0, 3);
+        const allSlides = this.config.carousel.slides;
         
-        // Carica la prima immagine immediatamente
-        if (criticalSlides[0]) {
-            await this.preloadImage(criticalSlides[0].image, 0);
+        // Carica SOLO la prima immagine per il display iniziale
+        if (allSlides[0]) {
+            await this.preloadImage(allSlides[0].image, 0);
+            console.log('First image loaded successfully');
         }
         
-        // Carica le altre due immagini critiche in parallelo
-        await Promise.all([
-            criticalSlides[1] ? this.preloadImage(criticalSlides[1].image, 1) : Promise.resolve(),
-            criticalSlides[2] ? this.preloadImage(criticalSlides[2].image, 2) : Promise.resolve()
-        ]);
-        
-        console.log('Critical images loaded successfully');
-        
-        // Preload delle immagini successive in background con priorità
-        setTimeout(() => {
-            const remainingSlides = this.config.carousel.slides.slice(3);
-            remainingSlides.forEach((slideData, index) => {
-                // Aggiungi un piccolo delay per non sovraccaricare la connessione
-                setTimeout(() => {
-                    this.preloadImage(slideData.image, index + 3);
-                }, index * 200);
-            });
-        }, 1500);
+        // Le altre immagini verranno caricate con lazy loading
+        console.log('Lazy loading enabled for remaining images');
     }
     
     // Preload di una singola immagine
@@ -149,6 +135,34 @@ class HeroCarousel {
         });
     }
     
+    // Lazy load di un'immagine quando necessario
+    async lazyLoadImage(index) {
+        const slideData = this.config.carousel.slides[index];
+        if (!slideData) return;
+        
+        const imageUrl = slideData.image;
+        
+        // Se l'immagine è già caricata, non fare nulla
+        if (this.loadedImages.has(imageUrl)) {
+            return;
+        }
+        
+        // Carica l'immagine
+        try {
+            await this.preloadImage(imageUrl, index);
+            
+            // Aggiorna la slide con l'immagine caricata
+            const slide = this.slides[index];
+            if (slide) {
+                slide.style.backgroundImage = `url(${imageUrl})`;
+                slide.classList.remove('loading');
+                console.log(`Lazy loaded image for slide ${index + 1}: ${imageUrl}`);
+            }
+        } catch (error) {
+            console.error(`Failed to lazy load image for slide ${index + 1}: ${imageUrl}`);
+        }
+    }
+    
     createSlides() {
         const slidesContainer = document.getElementById('carouselSlides');
         if (!slidesContainer) {
@@ -165,31 +179,18 @@ class HeroCarousel {
             slide.setAttribute('role', 'tabpanel');
             slide.setAttribute('aria-label', `Slide ${index + 1} di ${this.config.carousel.slides.length}`);
             
-            // Aggiungi classe di caricamento
-            slide.classList.add('loading');
+            // Usa l'immagine locale
+            const imageUrl = slideData.image;
             
-            // Imposta l'immagine di sfondo solo se è già caricata
-            if (this.loadedImages.has(slideData.image)) {
-                slide.style.backgroundImage = `url(${slideData.image})`;
-                slide.classList.remove('loading');
-                console.log(`Slide ${index + 1}: Image already loaded, displaying immediately`);
+            // Imposta l'immagine di sfondo solo per la prima slide (già precaricata)
+            if (index === 0 && this.loadedImages.has(imageUrl)) {
+                slide.style.backgroundImage = `url(${imageUrl})`;
+                console.log(`Slide ${index + 1}: First image already loaded, displaying immediately`);
             } else {
-                // Fallback con colore di sfondo durante il caricamento
+                // Per le altre slide, mostra un colore di sfondo e carica con lazy loading
                 slide.style.backgroundColor = '#2c5aa0';
-                console.log(`Slide ${index + 1}: Image not yet loaded, showing loading state`);
-                
-                // Carica l'immagine e aggiorna quando pronta
-                this.preloadImage(slideData.image, index).then(() => {
-                    slide.style.backgroundImage = `url(${slideData.image})`;
-                    slide.classList.remove('loading');
-                    // Aggiungi una transizione fluida per l'immagine appena caricata
-                    slide.style.transition = 'background-image 0.3s ease-in-out';
-                    console.log(`Slide ${index + 1}: Image loaded and displayed`);
-                }).catch(() => {
-                    // Mantieni il colore di fallback se il caricamento fallisce
-                    slide.classList.remove('loading');
-                    console.warn(`Failed to load image for slide ${index + 1}: ${slideData.image}`);
-                });
+                slide.classList.add('loading');
+                console.log(`Slide ${index + 1}: Will be loaded with lazy loading`);
             }
             
             const content = document.createElement('div');
@@ -270,6 +271,23 @@ class HeroCarousel {
         
         // Touch/swipe support
         this.initTouchSupport();
+        
+        // Resize listener per aggiornare le immagini responsive
+        window.addEventListener('resize', this.handleResize.bind(this));
+    }
+    
+    handleResize() {
+        // Debounce per evitare troppi aggiornamenti
+        clearTimeout(this.resizeTimeout);
+        this.resizeTimeout = setTimeout(() => {
+            this.updateResponsiveImages();
+        }, 250);
+    }
+    
+    updateResponsiveImages() {
+        // Non più necessario con immagini locali
+        // Le immagini WebP sono già ottimizzate per tutti i dispositivi
+        console.log('Responsive images update not needed with local assets');
     }
     
     initTouchSupport() {
@@ -307,38 +325,25 @@ class HeroCarousel {
         
         this.isTransitioning = true;
         
-        // Assicurati che l'immagine della slide sia caricata prima di mostrarla
-        const nextSlideData = this.config.carousel.slides[index];
-        if (!this.loadedImages.has(nextSlideData.image)) {
-            console.log(`Preloading image for slide ${index + 1} before showing`);
-            try {
-                await this.preloadImage(nextSlideData.image, index);
-                // Aggiorna la slide con l'immagine appena caricata
-                const slide = this.slides[index];
-                if (slide) {
-                    slide.style.backgroundImage = `url(${nextSlideData.image})`;
-                    slide.classList.remove('loading');
-                }
-            } catch (error) {
-                console.warn(`Failed to preload image for slide ${index + 1}:`, error);
-            }
-        }
-        
         // Nascondi slide corrente
         this.slides[this.currentSlide].classList.remove('active');
         this.slides[this.currentSlide].setAttribute('aria-hidden', 'true');
         this.indicators[this.currentSlide].classList.remove('active');
         this.indicators[this.currentSlide].setAttribute('aria-selected', 'false');
         
-        // Mostra nuova slide
+        // Aggiorna l'indice corrente
         this.currentSlide = index;
+        
+        // Lazy load dell'immagine se non è ancora caricata
+        await this.lazyLoadImage(index);
+        
+        // Attiva la nuova slide
         this.slides[this.currentSlide].classList.add('active');
+        
+        // Aggiorna attributi ARIA e indicatori
         this.slides[this.currentSlide].setAttribute('aria-hidden', 'false');
         this.indicators[this.currentSlide].classList.add('active');
         this.indicators[this.currentSlide].setAttribute('aria-selected', 'true');
-        
-        // Preload delle prossime 2 immagini in background
-        this.preloadNextImages(index);
         
         // Reset autoplay
         this.resetAutoplay();
@@ -346,34 +351,10 @@ class HeroCarousel {
         // Fine transizione
         setTimeout(() => {
             this.isTransitioning = false;
-        }, 500);
+        }, 100);
     }
     
-    // Preload delle prossime immagini per transizioni più fluide
-    preloadNextImages(currentIndex) {
-        const nextIndices = [
-            (currentIndex + 1) % this.slides.length,
-            (currentIndex + 2) % this.slides.length
-        ];
-        
-        nextIndices.forEach(index => {
-            const slideData = this.config.carousel.slides[index];
-            if (!this.loadedImages.has(slideData.image)) {
-                console.log(`Preloading next image for slide ${index + 1}`);
-                this.preloadImage(slideData.image, index).then(() => {
-                    // Aggiorna la slide se è già stata creata
-                    const slide = this.slides[index];
-                    if (slide && slide.classList.contains('loading')) {
-                        slide.style.backgroundImage = `url(${slideData.image})`;
-                        slide.classList.remove('loading');
-                        console.log(`Updated slide ${index + 1} with preloaded image`);
-                    }
-                }).catch(error => {
-                    console.warn(`Failed to preload next image for slide ${index + 1}:`, error);
-                });
-            }
-        });
-    }
+
     
     async nextSlide() {
         const nextIndex = (this.currentSlide + 1) % this.slides.length;
