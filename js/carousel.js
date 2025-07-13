@@ -1,7 +1,7 @@
 /**
  * Moenia s.r.l. - Hero Carousel
  * Gestisce il carousel principale con autoplay e controlli manuali
- * Ottimizzato per caricamento veloce delle immagini con preload intelligente
+ * Caricamento lazy delle immagini per performance ottimizzate
  */
 
 class HeroCarousel {
@@ -12,12 +12,7 @@ class HeroCarousel {
         this.autoplayInterval = null;
         this.autoplayDelay = 5000; // 5 secondi
         this.isTransitioning = false;
-        this.direction = 'next'; // Direzione della transizione
         this.loadedImages = new Set(); // Traccia le immagini caricate
-        this.imageCache = new Map(); // Cache per le immagini pre-caricate
-        this.resizeTimeout = null; // Timeout per il debounce del resize
-        this.preloadQueue = []; // Coda per il preload progressivo
-        this.isPreloading = false; // Flag per evitare preload multipli
         
         // Inizializza in modo asincrono
         this.init().catch(error => {
@@ -26,15 +21,12 @@ class HeroCarousel {
     }
     
     async init() {
-        this.loadConfig();
-        await this.preloadCriticalImages();
+        await this.loadConfig();
         this.createSlides();
         this.createIndicators();
         this.bindEvents();
         this.startAutoplay();
         this.showSlide(0);
-        // Avvia il preload progressivo delle immagini adiacenti
-        this.startProgressivePreload();
     }
     
     async loadConfig() {
@@ -58,7 +50,7 @@ class HeroCarousel {
                             title: "Progettazione Architettonica",
                             subtitle: "Soluzioni innovative per il futuro dell'edilizia",
                             cta: "Scopri i nostri progetti",
-                            ctaUrl: "#progetti",
+                            ctaUrl: "#about-us",
                             size: 62,
                             priority: "high"
                         },
@@ -66,8 +58,8 @@ class HeroCarousel {
                             image: "assets/carousel/2.webp",
                             title: "Consulenza Ingegneristica",
                             subtitle: "Competenza tecnica al servizio dell'innovazione",
-                            cta: "I nostri servizi",
-                            ctaUrl: "#servizi",
+                            cta: "Chi Siamo",
+                            ctaUrl: "#about-us",
                             size: 88,
                             priority: "high"
                         },
@@ -76,7 +68,7 @@ class HeroCarousel {
                             title: "Sostenibilità",
                             subtitle: "Progetti eco-compatibili per un futuro migliore",
                             cta: "Contattaci",
-                            ctaUrl: "#contatti",
+                            ctaUrl: "#contacts",
                             size: 275,
                             priority: "medium"
                         },
@@ -84,8 +76,8 @@ class HeroCarousel {
                             image: "assets/carousel/4.webp",
                             title: "Innovazione Tecnologica",
                             subtitle: "Tecnologie all'avanguardia per progetti di eccellenza",
-                            cta: "Scopri di più",
-                            ctaUrl: "#servizi",
+                            cta: "Chi Siamo",
+                            ctaUrl: "#about-us",
                             size: 99,
                             priority: "high"
                         },
@@ -93,8 +85,8 @@ class HeroCarousel {
                             image: "assets/carousel/5.webp",
                             title: "Design Sostenibile",
                             subtitle: "Architettura che rispetta l'ambiente e il futuro",
-                            cta: "I nostri progetti green",
-                            ctaUrl: "#progetti",
+                            cta: "Chi Siamo",
+                            ctaUrl: "#about-us",
                             size: 142,
                             priority: "medium"
                         },
@@ -103,7 +95,7 @@ class HeroCarousel {
                             title: "Eccellenza Progettuale",
                             subtitle: "Qualità e precisione in ogni dettaglio",
                             cta: "Conosci il nostro team",
-                            ctaUrl: "#chi-siamo",
+                            ctaUrl: "#about-us",
                             size: 763,
                             priority: "low"
                         },
@@ -112,7 +104,7 @@ class HeroCarousel {
                             title: "Soluzioni Personalizzate",
                             subtitle: "Ogni progetto è unico, ogni soluzione è su misura",
                             cta: "Inizia il tuo progetto",
-                            ctaUrl: "#contatti",
+                            ctaUrl: "#contacts",
                             size: 37,
                             priority: "high"
                         },
@@ -121,7 +113,7 @@ class HeroCarousel {
                             title: "Visione del Futuro",
                             subtitle: "Progettiamo oggi gli spazi di domani",
                             cta: "Collabora con noi",
-                            ctaUrl: "#contatti",
+                            ctaUrl: "#contacts",
                             size: 74,
                             priority: "high"
                         }
@@ -132,92 +124,13 @@ class HeroCarousel {
                         maxConcurrentPreloads: 3,
                         connectionAware: true
                     }
-                };
+                }
             }
         }
     }
     
-    // Preload intelligente delle immagini critiche
-    async preloadCriticalImages() {
-        const allSlides = this.config.carousel.slides;
-        
-        // Carica la prima immagine per il display iniziale
-        if (allSlides[0]) {
-            await this.preloadImage(allSlides[0].image, 0);
-            console.log('First image loaded successfully');
-        }
-        
-        // Precarica anche la seconda immagine per una transizione fluida
-        if (allSlides[1]) {
-            this.preloadImage(allSlides[1].image, 1).then(() => {
-                console.log('Second image preloaded for smooth transition');
-            }).catch(error => {
-                console.warn('Failed to preload second image:', error);
-            });
-        }
-    }
-    
-    // Preload progressivo delle immagini adiacenti
-    startProgressivePreload() {
-        // Precarica le immagini adiacenti alla slide corrente
-        this.preloadAdjacentImages();
-        
-        // Precarica anche le immagini più piccole per priorità
-        this.preloadSmallImages();
-    }
-    
-    // Precarica le immagini adiacenti alla slide corrente
-    async preloadAdjacentImages() {
-        const totalSlides = this.config.carousel.slides.length;
-        const prevIndex = this.currentSlide === 0 ? totalSlides - 1 : this.currentSlide - 1;
-        const nextIndex = (this.currentSlide + 1) % totalSlides;
-        
-        // Precarica slide precedente e successiva
-        const indicesToPreload = [prevIndex, nextIndex];
-        
-        for (const index of indicesToPreload) {
-            if (!this.loadedImages.has(this.config.carousel.slides[index].image)) {
-                this.preloadImage(this.config.carousel.slides[index].image, index).catch(error => {
-                    console.warn(`Failed to preload adjacent image ${index}:`, error);
-                });
-            }
-        }
-    }
-    
-    // Precarica le immagini per priorità
-    async preloadSmallImages() {
-        // Controlla la qualità della connessione
-        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        const isSlowConnection = connection && (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g');
-        
-        // Ordina le immagini per priorità e dimensione
-        const slides = this.config.carousel.slides;
-        const highPriorityImages = slides
-            .map((slide, index) => ({ ...slide, index }))
-            .filter(slide => slide.priority === 'high')
-            .sort((a, b) => a.size - b.size); // Ordina per dimensione crescente
-        
-        const mediumPriorityImages = slides
-            .map((slide, index) => ({ ...slide, index }))
-            .filter(slide => slide.priority === 'medium')
-            .sort((a, b) => a.size - b.size);
-        
-        // Se la connessione è lenta, precarica solo le immagini ad alta priorità più piccole
-        const imagesToPreload = isSlowConnection 
-            ? highPriorityImages.slice(0, 2) 
-            : [...highPriorityImages, ...mediumPriorityImages.slice(0, 2)];
-        
-        for (const slide of imagesToPreload) {
-            if (!this.loadedImages.has(slide.image)) {
-                this.preloadImage(slide.image, slide.index).catch(error => {
-                    console.warn(`Failed to preload image ${slide.index}:`, error);
-                });
-            }
-        }
-    }
-    
-    // Preload di una singola immagine con timeout
-    preloadImage(imageUrl, index) {
+    // Caricamento lazy di un'immagine
+    loadImage(imageUrl) {
         if (this.loadedImages.has(imageUrl)) {
             return Promise.resolve();
         }
@@ -232,14 +145,13 @@ class HeroCarousel {
             img.onload = () => {
                 clearTimeout(timeout);
                 this.loadedImages.add(imageUrl);
-                this.imageCache.set(index, img);
-                console.log(`Image preloaded successfully: ${imageUrl}`);
+                console.log(`Image loaded successfully: ${imageUrl}`);
                 resolve();
             };
             
             img.onerror = () => {
                 clearTimeout(timeout);
-                console.error(`Failed to preload image: ${imageUrl}`);
+                console.error(`Failed to load image: ${imageUrl}`);
                 reject(new Error(`Failed to load image: ${imageUrl}`));
             };
             
@@ -249,6 +161,12 @@ class HeroCarousel {
     
     // Lazy load di un'immagine quando necessario
     async lazyLoadImage(index) {
+        // Verifica che la configurazione sia caricata
+        if (!this.config || !this.config.carousel || !this.config.carousel.slides) {
+            console.error('Configuration not loaded properly');
+            return;
+        }
+        
         const slideData = this.config.carousel.slides[index];
         if (!slideData) return;
         
@@ -259,9 +177,9 @@ class HeroCarousel {
             return;
         }
         
-        // Carica l'immagine con priorità alta
+        // Carica l'immagine
         try {
-            await this.preloadImage(imageUrl, index);
+            await this.loadImage(imageUrl);
             
             // Aggiorna la slide con l'immagine caricata
             const slide = this.slides[index];
@@ -270,15 +188,18 @@ class HeroCarousel {
                 slide.classList.remove('loading-progress');
                 console.log(`Lazy loaded image for slide ${index + 1}: ${imageUrl}`);
             }
-            
-            // Dopo aver caricato questa immagine, precarica le adiacenti
-            this.preloadAdjacentImages();
         } catch (error) {
             console.error(`Failed to lazy load image for slide ${index + 1}: ${imageUrl}`);
         }
     }
     
     createSlides() {
+        // Verifica che la configurazione sia caricata
+        if (!this.config || !this.config.carousel || !this.config.carousel.slides) {
+            console.error('Configuration not loaded properly');
+            return;
+        }
+        
         const slidesContainer = document.getElementById('carouselSlides');
         if (!slidesContainer) {
             console.error('Carousel slides container not found');
@@ -294,18 +215,13 @@ class HeroCarousel {
             slide.setAttribute('role', 'tabpanel');
             slide.setAttribute('aria-label', `Slide ${index + 1} di ${this.config.carousel.slides.length}`);
             
-            // Usa l'immagine locale
-            const imageUrl = slideData.image;
-            
-            // Imposta l'immagine di sfondo solo per la prima slide (già precaricata)
-            if (index === 0 && this.loadedImages.has(imageUrl)) {
-                slide.style.backgroundImage = `url(${imageUrl})`;
-                console.log(`Slide ${index + 1}: First image already loaded, displaying immediately`);
+            // Imposta l'immagine di sfondo solo per la prima slide
+            if (index === 0) {
+                slide.style.backgroundImage = `url(${slideData.image})`;
+                this.loadedImages.add(slideData.image);
             } else {
-                // Per le altre slide, mostra un loading progressivo
+                // Per le altre slide, carica l'immagine quando necessario
                 slide.style.backgroundColor = '#2c5aa0';
-                slide.classList.add('loading-progress');
-                console.log(`Slide ${index + 1}: Will be loaded with progressive loading`);
             }
             
             const content = document.createElement('div');
@@ -324,6 +240,22 @@ class HeroCarousel {
             cta.href = slideData.ctaUrl;
             cta.textContent = slideData.cta;
             
+            // Gestione speciale per i link del carousel
+            cta.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(slideData.ctaUrl);
+                if (target) {
+                    const headerHeight = document.querySelector('.header')?.offsetHeight || 80;
+                    const extraOffset = -30; // Offset negativo per posizionare meglio
+                    const targetPosition = Math.max(0, target.offsetTop - headerHeight - extraOffset);
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+            
             content.appendChild(title);
             content.appendChild(subtitle);
             content.appendChild(cta);
@@ -335,6 +267,12 @@ class HeroCarousel {
     }
     
     createIndicators() {
+        // Verifica che la configurazione sia caricata
+        if (!this.config || !this.config.carousel || !this.config.carousel.slides) {
+            console.error('Configuration not loaded properly');
+            return;
+        }
+        
         const indicatorsContainer = document.querySelector('.carousel-indicators');
         if (!indicatorsContainer) return;
         
@@ -347,14 +285,6 @@ class HeroCarousel {
             indicator.setAttribute('aria-controls', `slide-${index}`);
             
             indicator.addEventListener('click', () => {
-                // Determina la direzione per l'indicatore
-                if (index > this.currentSlide) {
-                    this.direction = 'next';
-                } else if (index < this.currentSlide) {
-                    this.direction = 'prev';
-                } else {
-                    this.direction = 'next'; // Default
-                }
                 this.goToSlide(index);
             });
             
@@ -370,14 +300,12 @@ class HeroCarousel {
         
         if (prevButton) {
             prevButton.addEventListener('click', () => {
-                this.direction = 'prev';
                 this.prevSlide();
             });
         }
         
         if (nextButton) {
             nextButton.addEventListener('click', () => {
-                this.direction = 'next';
                 this.nextSlide();
             });
         }
@@ -385,10 +313,8 @@ class HeroCarousel {
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') {
-                this.direction = 'prev';
                 this.prevSlide();
             } else if (e.key === 'ArrowRight') {
-                this.direction = 'next';
                 this.nextSlide();
             }
         });
@@ -408,17 +334,7 @@ class HeroCarousel {
     }
     
     handleResize() {
-        // Debounce per evitare troppi aggiornamenti
-        clearTimeout(this.resizeTimeout);
-        this.resizeTimeout = setTimeout(() => {
-            this.updateResponsiveImages();
-        }, 250);
-    }
-    
-    updateResponsiveImages() {
-        // Non più necessario con immagini locali
-        // Le immagini WebP sono già ottimizzate per tutti i dispositivi
-        console.log('Responsive images update not needed with local assets');
+        // Metodo vuoto per compatibilità
     }
     
     initTouchSupport() {
@@ -444,37 +360,29 @@ class HeroCarousel {
         
         if (Math.abs(diff) > threshold) {
             if (diff > 0) {
-                this.direction = 'next';
                 this.nextSlide();
             } else {
-                this.direction = 'prev';
                 this.prevSlide();
             }
         }
     }
     
     async showSlide(index) {
+        // Verifica che la configurazione sia caricata
+        if (!this.config || !this.config.carousel || !this.config.carousel.slides) {
+            console.error('Configuration not loaded properly');
+            return;
+        }
+        
         if (this.isTransitioning || index === this.currentSlide) return;
         
         this.isTransitioning = true;
         
-        // Aggiungi classe di uscita alla slide corrente
-        const currentSlide = this.slides[this.currentSlide];
-        currentSlide.classList.add('slide-exiting');
-        if (this.direction === 'prev') {
-            currentSlide.classList.add('prev');
-        }
-        
-        // Rimuovi indicatori attivi
+        // Nascondi slide corrente
+        this.slides[this.currentSlide].classList.remove('active');
+        this.slides[this.currentSlide].setAttribute('aria-hidden', 'true');
         this.indicators[this.currentSlide].classList.remove('active');
         this.indicators[this.currentSlide].setAttribute('aria-selected', 'false');
-        
-        // Aspetta l'animazione di uscita
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        // Nascondi slide corrente
-        currentSlide.classList.remove('active', 'slide-exiting', 'prev');
-        currentSlide.setAttribute('aria-hidden', 'true');
         
         // Aggiorna l'indice corrente
         this.currentSlide = index;
@@ -482,31 +390,11 @@ class HeroCarousel {
         // Lazy load dell'immagine se non è ancora caricata
         await this.lazyLoadImage(index);
         
-        // Prepara la nuova slide per l'animazione di entrata
-        const newSlide = this.slides[this.currentSlide];
-        newSlide.classList.add('slide-entering');
-        if (this.direction === 'prev') {
-            newSlide.classList.add('prev');
-        }
-        
         // Attiva la nuova slide
-        newSlide.classList.add('active');
-        newSlide.setAttribute('aria-hidden', 'false');
-        
-        // Aspetta un frame per assicurarsi che la classe active sia applicata
-        await new Promise(resolve => requestAnimationFrame(resolve));
-        
-        // Rimuovi la classe di entrata dopo l'animazione
-        setTimeout(() => {
-            newSlide.classList.remove('slide-entering', 'prev');
-        }, 800);
-        
-        // Aggiorna indicatori
+        this.slides[this.currentSlide].classList.add('active');
+        this.slides[this.currentSlide].setAttribute('aria-hidden', 'false');
         this.indicators[this.currentSlide].classList.add('active');
         this.indicators[this.currentSlide].setAttribute('aria-selected', 'true');
-        
-        // Precarica le immagini adiacenti per le prossime transizioni
-        this.preloadAdjacentImages();
         
         // Reset autoplay
         this.resetAutoplay();
@@ -514,33 +402,41 @@ class HeroCarousel {
         // Fine transizione
         setTimeout(() => {
             this.isTransitioning = false;
-        }, 800);
+        }, 300);
     }
     
 
     
     async nextSlide() {
+        // Verifica che la configurazione sia caricata
+        if (!this.config || !this.config.carousel || !this.config.carousel.slides) {
+            console.error('Configuration not loaded properly');
+            return;
+        }
+        
         const nextIndex = (this.currentSlide + 1) % this.slides.length;
-        this.direction = 'next';
         await this.showSlide(nextIndex);
     }
     
     async prevSlide() {
+        // Verifica che la configurazione sia caricata
+        if (!this.config || !this.config.carousel || !this.config.carousel.slides) {
+            console.error('Configuration not loaded properly');
+            return;
+        }
+        
         const prevIndex = this.currentSlide === 0 ? this.slides.length - 1 : this.currentSlide - 1;
-        this.direction = 'prev';
         await this.showSlide(prevIndex);
     }
     
     async goToSlide(index) {
+        // Verifica che la configurazione sia caricata
+        if (!this.config || !this.config.carousel || !this.config.carousel.slides) {
+            console.error('Configuration not loaded properly');
+            return;
+        }
+        
         if (index >= 0 && index < this.slides.length) {
-            // Determina la direzione basata sull'indice
-            if (index > this.currentSlide) {
-                this.direction = 'next';
-            } else if (index < this.currentSlide) {
-                this.direction = 'prev';
-            } else {
-                this.direction = 'next'; // Default
-            }
             await this.showSlide(index);
         }
     }
@@ -549,7 +445,6 @@ class HeroCarousel {
         if (this.autoplayInterval) return;
         
         this.autoplayInterval = setInterval(() => {
-            this.direction = 'next';
             this.nextSlide();
         }, this.autoplayDelay);
     }
