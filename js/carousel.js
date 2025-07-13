@@ -15,12 +15,15 @@ class HeroCarousel {
         this.loadedImages = new Set(); // Traccia le immagini caricate
         this.imageCache = new Map(); // Cache per le immagini pre-caricate
         
-        this.init();
+        // Inizializza in modo asincrono
+        this.init().catch(error => {
+            console.error('Error initializing carousel:', error);
+        });
     }
     
-    init() {
+    async init() {
         this.loadConfig();
-        this.preloadCriticalImages();
+        await this.preloadCriticalImages();
         this.createSlides();
         this.createIndicators();
         this.bindEvents();
@@ -96,21 +99,21 @@ class HeroCarousel {
     }
     
     // Preload delle immagini critiche (prime 3)
-    preloadCriticalImages() {
+    async preloadCriticalImages() {
         const criticalSlides = this.config.carousel.slides.slice(0, 3);
         
         // Carica la prima immagine immediatamente
         if (criticalSlides[0]) {
-            this.preloadImage(criticalSlides[0].image, 0);
+            await this.preloadImage(criticalSlides[0].image, 0);
         }
         
         // Carica le altre due immagini critiche in parallelo
-        Promise.all([
+        await Promise.all([
             criticalSlides[1] ? this.preloadImage(criticalSlides[1].image, 1) : Promise.resolve(),
             criticalSlides[2] ? this.preloadImage(criticalSlides[2].image, 2) : Promise.resolve()
-        ]).then(() => {
-            console.log('Critical images loaded successfully');
-        });
+        ]);
+        
+        console.log('Critical images loaded successfully');
         
         // Preload delle immagini successive in background con priorità
         setTimeout(() => {
@@ -169,9 +172,11 @@ class HeroCarousel {
             if (this.loadedImages.has(slideData.image)) {
                 slide.style.backgroundImage = `url(${slideData.image})`;
                 slide.classList.remove('loading');
+                console.log(`Slide ${index + 1}: Image already loaded, displaying immediately`);
             } else {
                 // Fallback con colore di sfondo durante il caricamento
                 slide.style.backgroundColor = '#2c5aa0';
+                console.log(`Slide ${index + 1}: Image not yet loaded, showing loading state`);
                 
                 // Carica l'immagine e aggiorna quando pronta
                 this.preloadImage(slideData.image, index).then(() => {
@@ -179,6 +184,7 @@ class HeroCarousel {
                     slide.classList.remove('loading');
                     // Aggiungi una transizione fluida per l'immagine appena caricata
                     slide.style.transition = 'background-image 0.3s ease-in-out';
+                    console.log(`Slide ${index + 1}: Image loaded and displayed`);
                 }).catch(() => {
                     // Mantieni il colore di fallback se il caricamento fallisce
                     slide.classList.remove('loading');
@@ -296,15 +302,26 @@ class HeroCarousel {
         }
     }
     
-    showSlide(index) {
+    async showSlide(index) {
         if (this.isTransitioning || index === this.currentSlide) return;
         
         this.isTransitioning = true;
         
-        // Preload dell'immagine della prossima slide se non è ancora caricata
+        // Assicurati che l'immagine della slide sia caricata prima di mostrarla
         const nextSlideData = this.config.carousel.slides[index];
         if (!this.loadedImages.has(nextSlideData.image)) {
-            this.preloadImage(nextSlideData.image, index);
+            console.log(`Preloading image for slide ${index + 1} before showing`);
+            try {
+                await this.preloadImage(nextSlideData.image, index);
+                // Aggiorna la slide con l'immagine appena caricata
+                const slide = this.slides[index];
+                if (slide) {
+                    slide.style.backgroundImage = `url(${nextSlideData.image})`;
+                    slide.classList.remove('loading');
+                }
+            } catch (error) {
+                console.warn(`Failed to preload image for slide ${index + 1}:`, error);
+            }
         }
         
         // Nascondi slide corrente
@@ -342,24 +359,35 @@ class HeroCarousel {
         nextIndices.forEach(index => {
             const slideData = this.config.carousel.slides[index];
             if (!this.loadedImages.has(slideData.image)) {
-                this.preloadImage(slideData.image, index);
+                console.log(`Preloading next image for slide ${index + 1}`);
+                this.preloadImage(slideData.image, index).then(() => {
+                    // Aggiorna la slide se è già stata creata
+                    const slide = this.slides[index];
+                    if (slide && slide.classList.contains('loading')) {
+                        slide.style.backgroundImage = `url(${slideData.image})`;
+                        slide.classList.remove('loading');
+                        console.log(`Updated slide ${index + 1} with preloaded image`);
+                    }
+                }).catch(error => {
+                    console.warn(`Failed to preload next image for slide ${index + 1}:`, error);
+                });
             }
         });
     }
     
-    nextSlide() {
+    async nextSlide() {
         const nextIndex = (this.currentSlide + 1) % this.slides.length;
-        this.showSlide(nextIndex);
+        await this.showSlide(nextIndex);
     }
     
-    prevSlide() {
+    async prevSlide() {
         const prevIndex = this.currentSlide === 0 ? this.slides.length - 1 : this.currentSlide - 1;
-        this.showSlide(prevIndex);
+        await this.showSlide(prevIndex);
     }
     
-    goToSlide(index) {
+    async goToSlide(index) {
         if (index >= 0 && index < this.slides.length) {
-            this.showSlide(index);
+            await this.showSlide(index);
         }
     }
     
