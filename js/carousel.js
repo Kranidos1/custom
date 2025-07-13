@@ -12,6 +12,7 @@ class HeroCarousel {
         this.autoplayInterval = null;
         this.autoplayDelay = 5000; // 5 secondi
         this.isTransitioning = false;
+        this.direction = 'next'; // Direzione della transizione
         this.loadedImages = new Set(); // Traccia le immagini caricate
         this.imageCache = new Map(); // Cache per le immagini pre-caricate
         this.resizeTimeout = null; // Timeout per il debounce del resize
@@ -346,6 +347,14 @@ class HeroCarousel {
             indicator.setAttribute('aria-controls', `slide-${index}`);
             
             indicator.addEventListener('click', () => {
+                // Determina la direzione per l'indicatore
+                if (index > this.currentSlide) {
+                    this.direction = 'next';
+                } else if (index < this.currentSlide) {
+                    this.direction = 'prev';
+                } else {
+                    this.direction = 'next'; // Default
+                }
                 this.goToSlide(index);
             });
             
@@ -360,18 +369,26 @@ class HeroCarousel {
         const nextButton = document.querySelector('.carousel-next');
         
         if (prevButton) {
-            prevButton.addEventListener('click', () => this.prevSlide());
+            prevButton.addEventListener('click', () => {
+                this.direction = 'prev';
+                this.prevSlide();
+            });
         }
         
         if (nextButton) {
-            nextButton.addEventListener('click', () => this.nextSlide());
+            nextButton.addEventListener('click', () => {
+                this.direction = 'next';
+                this.nextSlide();
+            });
         }
         
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') {
+                this.direction = 'prev';
                 this.prevSlide();
             } else if (e.key === 'ArrowRight') {
+                this.direction = 'next';
                 this.nextSlide();
             }
         });
@@ -427,8 +444,10 @@ class HeroCarousel {
         
         if (Math.abs(diff) > threshold) {
             if (diff > 0) {
+                this.direction = 'next';
                 this.nextSlide();
             } else {
+                this.direction = 'prev';
                 this.prevSlide();
             }
         }
@@ -439,11 +458,23 @@ class HeroCarousel {
         
         this.isTransitioning = true;
         
-        // Nascondi slide corrente
-        this.slides[this.currentSlide].classList.remove('active');
-        this.slides[this.currentSlide].setAttribute('aria-hidden', 'true');
+        // Aggiungi classe di uscita alla slide corrente
+        const currentSlide = this.slides[this.currentSlide];
+        currentSlide.classList.add('slide-exiting');
+        if (this.direction === 'prev') {
+            currentSlide.classList.add('prev');
+        }
+        
+        // Rimuovi indicatori attivi
         this.indicators[this.currentSlide].classList.remove('active');
         this.indicators[this.currentSlide].setAttribute('aria-selected', 'false');
+        
+        // Aspetta l'animazione di uscita
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        // Nascondi slide corrente
+        currentSlide.classList.remove('active', 'slide-exiting', 'prev');
+        currentSlide.setAttribute('aria-hidden', 'true');
         
         // Aggiorna l'indice corrente
         this.currentSlide = index;
@@ -451,11 +482,26 @@ class HeroCarousel {
         // Lazy load dell'immagine se non è ancora caricata
         await this.lazyLoadImage(index);
         
-        // Attiva la nuova slide
-        this.slides[this.currentSlide].classList.add('active');
+        // Prepara la nuova slide per l'animazione di entrata
+        const newSlide = this.slides[this.currentSlide];
+        newSlide.classList.add('slide-entering');
+        if (this.direction === 'prev') {
+            newSlide.classList.add('prev');
+        }
         
-        // Aggiorna attributi ARIA e indicatori
-        this.slides[this.currentSlide].setAttribute('aria-hidden', 'false');
+        // Attiva la nuova slide
+        newSlide.classList.add('active');
+        newSlide.setAttribute('aria-hidden', 'false');
+        
+        // Aspetta un frame per assicurarsi che la classe active sia applicata
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        
+        // Rimuovi la classe di entrata dopo l'animazione
+        setTimeout(() => {
+            newSlide.classList.remove('slide-entering', 'prev');
+        }, 800);
+        
+        // Aggiorna indicatori
         this.indicators[this.currentSlide].classList.add('active');
         this.indicators[this.currentSlide].setAttribute('aria-selected', 'true');
         
@@ -468,23 +514,33 @@ class HeroCarousel {
         // Fine transizione
         setTimeout(() => {
             this.isTransitioning = false;
-        }, 100);
+        }, 800);
     }
     
 
     
     async nextSlide() {
         const nextIndex = (this.currentSlide + 1) % this.slides.length;
+        this.direction = 'next';
         await this.showSlide(nextIndex);
     }
     
     async prevSlide() {
         const prevIndex = this.currentSlide === 0 ? this.slides.length - 1 : this.currentSlide - 1;
+        this.direction = 'prev';
         await this.showSlide(prevIndex);
     }
     
     async goToSlide(index) {
         if (index >= 0 && index < this.slides.length) {
+            // Determina la direzione basata sull'indice
+            if (index > this.currentSlide) {
+                this.direction = 'next';
+            } else if (index < this.currentSlide) {
+                this.direction = 'prev';
+            } else {
+                this.direction = 'next'; // Default
+            }
             await this.showSlide(index);
         }
     }
@@ -493,6 +549,7 @@ class HeroCarousel {
         if (this.autoplayInterval) return;
         
         this.autoplayInterval = setInterval(() => {
+            this.direction = 'next';
             this.nextSlide();
         }, this.autoplayDelay);
     }
