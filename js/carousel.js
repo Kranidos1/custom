@@ -30,56 +30,56 @@ class HeroCarousel {
             carousel: {
                 slides: [
                     {
-                        image: "assets/carousel/1.webp",
+                        image: "https://i.imgur.com/27ULXku_d.webp?maxwidth=760&fidelity=grand",
                         title: "Progettazione Architettonica",
                         subtitle: "Soluzioni innovative per il futuro dell'edilizia",
                         cta: "Scopri i nostri progetti",
                         ctaUrl: "#progetti"
                     },
                     {
-                        image: "assets/carousel/2.webp",
+                        image: "https://i.imgur.com/5jPafmo_d.webp?maxwidth=760&fidelity=grand",
                         title: "Consulenza Ingegneristica",
                         subtitle: "Competenza tecnica al servizio dell'innovazione",
                         cta: "I nostri servizi",
                         ctaUrl: "#servizi"
                     },
                     {
-                        image: "assets/carousel/3.webp",
+                        image: "https://i.imgur.com/KcmTnZo_d.webp?maxwidth=760&fidelity=grand",
                         title: "Sostenibilità",
                         subtitle: "Progetti eco-compatibili per un futuro migliore",
                         cta: "Contattaci",
                         ctaUrl: "#contatti"
                     },
                     {
-                        image: "assets/carousel/4.webp",
+                        image: "https://i.imgur.com/W64I68o_d.webp?maxwidth=760&fidelity=grand",
                         title: "Innovazione Tecnologica",
                         subtitle: "Tecnologie all'avanguardia per progetti di eccellenza",
                         cta: "Scopri di più",
                         ctaUrl: "#servizi"
                     },
                     {
-                        image: "assets/carousel/5.webp",
+                        image: "https://i.imgur.com/OSyZhnx_d.webp?maxwidth=760&fidelity=grand",
                         title: "Design Sostenibile",
                         subtitle: "Architettura che rispetta l'ambiente e il futuro",
                         cta: "I nostri progetti green",
                         ctaUrl: "#progetti"
                     },
                     {
-                        image: "assets/carousel/6.webp",
+                        image: "https://i.imgur.com/ilsL1Wf_d.webp?maxwidth=760&fidelity=grand",
                         title: "Eccellenza Progettuale",
                         subtitle: "Qualità e precisione in ogni dettaglio",
                         cta: "Conosci il nostro team",
                         ctaUrl: "#chi-siamo"
                     },
                     {
-                        image: "assets/carousel/7.webp",
+                        image: "https://i.imgur.com/MmeJRaj_d.webp?maxwidth=760&fidelity=grand",
                         title: "Soluzioni Personalizzate",
                         subtitle: "Ogni progetto è unico, ogni soluzione è su misura",
                         cta: "Inizia il tuo progetto",
                         ctaUrl: "#contatti"
                     },
                     {
-                        image: "assets/carousel/8.webp",
+                        image: "https://i.imgur.com/I03FS8x_d.webp?maxwidth=760&fidelity=grand",
                         title: "Visione del Futuro",
                         subtitle: "Progettiamo oggi gli spazi di domani",
                         cta: "Collabora con noi",
