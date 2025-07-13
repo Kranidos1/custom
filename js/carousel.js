@@ -1,7 +1,7 @@
 /**
  * Moenia s.r.l. - Hero Carousel
  * Gestisce il carousel principale con autoplay e controlli manuali
- * Ottimizzato per caricamento veloce delle immagini
+ * Ottimizzato per caricamento veloce delle immagini con preload intelligente
  */
 
 class HeroCarousel {
@@ -15,6 +15,8 @@ class HeroCarousel {
         this.loadedImages = new Set(); // Traccia le immagini caricate
         this.imageCache = new Map(); // Cache per le immagini pre-caricate
         this.resizeTimeout = null; // Timeout per il debounce del resize
+        this.preloadQueue = []; // Coda per il preload progressivo
+        this.isPreloading = false; // Flag per evitare preload multipli
         
         // Inizializza in modo asincrono
         this.init().catch(error => {
@@ -30,90 +32,190 @@ class HeroCarousel {
         this.bindEvents();
         this.startAutoplay();
         this.showSlide(0);
+        // Avvia il preload progressivo delle immagini adiacenti
+        this.startProgressivePreload();
     }
     
     async loadConfig() {
-        // Usa direttamente i dati delle immagini senza caricare config.json
-        this.config = {
-            carousel: {
-                slides: [
-                    {
-                        image: "assets/carousel/1.webp",
-                        title: "Progettazione Architettonica",
-                        subtitle: "Soluzioni innovative per il futuro dell'edilizia",
-                        cta: "Scopri i nostri progetti",
-                        ctaUrl: "#progetti"
-                    },
-                    {
-                        image: "assets/carousel/2.webp",
-                        title: "Consulenza Ingegneristica",
-                        subtitle: "Competenza tecnica al servizio dell'innovazione",
-                        cta: "I nostri servizi",
-                        ctaUrl: "#servizi"
-                    },
-                    {
-                        image: "assets/carousel/3.webp",
-                        title: "Sostenibilità",
-                        subtitle: "Progetti eco-compatibili per un futuro migliore",
-                        cta: "Contattaci",
-                        ctaUrl: "#contatti"
-                    },
-                    {
-                        image: "assets/carousel/4.webp",
-                        title: "Innovazione Tecnologica",
-                        subtitle: "Tecnologie all'avanguardia per progetti di eccellenza",
-                        cta: "Scopri di più",
-                        ctaUrl: "#servizi"
-                    },
-                    {
-                        image: "assets/carousel/5.webp",
-                        title: "Design Sostenibile",
-                        subtitle: "Architettura che rispetta l'ambiente e il futuro",
-                        cta: "I nostri progetti green",
-                        ctaUrl: "#progetti"
-                    },
-                    {
-                        image: "assets/carousel/6.webp",
-                        title: "Eccellenza Progettuale",
-                        subtitle: "Qualità e precisione in ogni dettaglio",
-                        cta: "Conosci il nostro team",
-                        ctaUrl: "#chi-siamo"
-                    },
-                    {
-                        image: "assets/carousel/7.webp",
-                        title: "Soluzioni Personalizzate",
-                        subtitle: "Ogni progetto è unico, ogni soluzione è su misura",
-                        cta: "Inizia il tuo progetto",
-                        ctaUrl: "#contatti"
-                    },
-                    {
-                        image: "assets/carousel/8.webp",
-                        title: "Visione del Futuro",
-                        subtitle: "Progettiamo oggi gli spazi di domani",
-                        cta: "Collabora con noi",
-                        ctaUrl: "#contatti"
-                    }
-                ]
+        try {
+            // Prova a caricare il file di configurazione
+            const response = await fetch('data/carousel-config.json');
+            if (response.ok) {
+                this.config = await response.json();
+                console.log('Loaded carousel config from file:', this.config);
+            } else {
+                throw new Error('Config file not found, using fallback');
             }
-        };
-        console.log('Using hardcoded carousel data:', this.config);
+        } catch (error) {
+            console.warn('Using fallback carousel config:', error.message);
+            // Fallback con dati hardcoded
+            this.config = {
+                carousel: {
+                    slides: [
+                        {
+                            image: "assets/carousel/1.webp",
+                            title: "Progettazione Architettonica",
+                            subtitle: "Soluzioni innovative per il futuro dell'edilizia",
+                            cta: "Scopri i nostri progetti",
+                            ctaUrl: "#progetti",
+                            size: 62,
+                            priority: "high"
+                        },
+                        {
+                            image: "assets/carousel/2.webp",
+                            title: "Consulenza Ingegneristica",
+                            subtitle: "Competenza tecnica al servizio dell'innovazione",
+                            cta: "I nostri servizi",
+                            ctaUrl: "#servizi",
+                            size: 88,
+                            priority: "high"
+                        },
+                        {
+                            image: "assets/carousel/3.webp",
+                            title: "Sostenibilità",
+                            subtitle: "Progetti eco-compatibili per un futuro migliore",
+                            cta: "Contattaci",
+                            ctaUrl: "#contatti",
+                            size: 275,
+                            priority: "medium"
+                        },
+                        {
+                            image: "assets/carousel/4.webp",
+                            title: "Innovazione Tecnologica",
+                            subtitle: "Tecnologie all'avanguardia per progetti di eccellenza",
+                            cta: "Scopri di più",
+                            ctaUrl: "#servizi",
+                            size: 99,
+                            priority: "high"
+                        },
+                        {
+                            image: "assets/carousel/5.webp",
+                            title: "Design Sostenibile",
+                            subtitle: "Architettura che rispetta l'ambiente e il futuro",
+                            cta: "I nostri progetti green",
+                            ctaUrl: "#progetti",
+                            size: 142,
+                            priority: "medium"
+                        },
+                        {
+                            image: "assets/carousel/6.webp",
+                            title: "Eccellenza Progettuale",
+                            subtitle: "Qualità e precisione in ogni dettaglio",
+                            cta: "Conosci il nostro team",
+                            ctaUrl: "#chi-siamo",
+                            size: 763,
+                            priority: "low"
+                        },
+                        {
+                            image: "assets/carousel/7.webp",
+                            title: "Soluzioni Personalizzate",
+                            subtitle: "Ogni progetto è unico, ogni soluzione è su misura",
+                            cta: "Inizia il tuo progetto",
+                            ctaUrl: "#contatti",
+                            size: 37,
+                            priority: "high"
+                        },
+                        {
+                            image: "assets/carousel/8.webp",
+                            title: "Visione del Futuro",
+                            subtitle: "Progettiamo oggi gli spazi di domani",
+                            cta: "Collabora con noi",
+                            ctaUrl: "#contatti",
+                            size: 74,
+                            priority: "high"
+                        }
+                    ],
+                    settings: {
+                        autoplayDelay: 5000,
+                        preloadStrategy: "progressive",
+                        maxConcurrentPreloads: 3,
+                        connectionAware: true
+                    }
+                };
+            }
+        }
     }
     
-    // Preload solo della prima immagine
+    // Preload intelligente delle immagini critiche
     async preloadCriticalImages() {
         const allSlides = this.config.carousel.slides;
         
-        // Carica SOLO la prima immagine per il display iniziale
+        // Carica la prima immagine per il display iniziale
         if (allSlides[0]) {
             await this.preloadImage(allSlides[0].image, 0);
             console.log('First image loaded successfully');
         }
         
-        // Le altre immagini verranno caricate con lazy loading
-        console.log('Lazy loading enabled for remaining images');
+        // Precarica anche la seconda immagine per una transizione fluida
+        if (allSlides[1]) {
+            this.preloadImage(allSlides[1].image, 1).then(() => {
+                console.log('Second image preloaded for smooth transition');
+            }).catch(error => {
+                console.warn('Failed to preload second image:', error);
+            });
+        }
     }
     
-    // Preload di una singola immagine
+    // Preload progressivo delle immagini adiacenti
+    startProgressivePreload() {
+        // Precarica le immagini adiacenti alla slide corrente
+        this.preloadAdjacentImages();
+        
+        // Precarica anche le immagini più piccole per priorità
+        this.preloadSmallImages();
+    }
+    
+    // Precarica le immagini adiacenti alla slide corrente
+    async preloadAdjacentImages() {
+        const totalSlides = this.config.carousel.slides.length;
+        const prevIndex = this.currentSlide === 0 ? totalSlides - 1 : this.currentSlide - 1;
+        const nextIndex = (this.currentSlide + 1) % totalSlides;
+        
+        // Precarica slide precedente e successiva
+        const indicesToPreload = [prevIndex, nextIndex];
+        
+        for (const index of indicesToPreload) {
+            if (!this.loadedImages.has(this.config.carousel.slides[index].image)) {
+                this.preloadImage(this.config.carousel.slides[index].image, index).catch(error => {
+                    console.warn(`Failed to preload adjacent image ${index}:`, error);
+                });
+            }
+        }
+    }
+    
+    // Precarica le immagini per priorità
+    async preloadSmallImages() {
+        // Controlla la qualità della connessione
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        const isSlowConnection = connection && (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g');
+        
+        // Ordina le immagini per priorità e dimensione
+        const slides = this.config.carousel.slides;
+        const highPriorityImages = slides
+            .map((slide, index) => ({ ...slide, index }))
+            .filter(slide => slide.priority === 'high')
+            .sort((a, b) => a.size - b.size); // Ordina per dimensione crescente
+        
+        const mediumPriorityImages = slides
+            .map((slide, index) => ({ ...slide, index }))
+            .filter(slide => slide.priority === 'medium')
+            .sort((a, b) => a.size - b.size);
+        
+        // Se la connessione è lenta, precarica solo le immagini ad alta priorità più piccole
+        const imagesToPreload = isSlowConnection 
+            ? highPriorityImages.slice(0, 2) 
+            : [...highPriorityImages, ...mediumPriorityImages.slice(0, 2)];
+        
+        for (const slide of imagesToPreload) {
+            if (!this.loadedImages.has(slide.image)) {
+                this.preloadImage(slide.image, slide.index).catch(error => {
+                    console.warn(`Failed to preload image ${slide.index}:`, error);
+                });
+            }
+        }
+    }
+    
+    // Preload di una singola immagine con timeout
     preloadImage(imageUrl, index) {
         if (this.loadedImages.has(imageUrl)) {
             return Promise.resolve();
@@ -121,16 +223,25 @@ class HeroCarousel {
         
         return new Promise((resolve, reject) => {
             const img = new Image();
+            const timeout = setTimeout(() => {
+                img.src = '';
+                reject(new Error(`Timeout loading image: ${imageUrl}`));
+            }, 10000); // 10 secondi di timeout
+            
             img.onload = () => {
+                clearTimeout(timeout);
                 this.loadedImages.add(imageUrl);
                 this.imageCache.set(index, img);
                 console.log(`Image preloaded successfully: ${imageUrl}`);
                 resolve();
             };
+            
             img.onerror = () => {
+                clearTimeout(timeout);
                 console.error(`Failed to preload image: ${imageUrl}`);
-                reject();
+                reject(new Error(`Failed to load image: ${imageUrl}`));
             };
+            
             img.src = imageUrl;
         });
     }
@@ -147,7 +258,7 @@ class HeroCarousel {
             return;
         }
         
-        // Carica l'immagine
+        // Carica l'immagine con priorità alta
         try {
             await this.preloadImage(imageUrl, index);
             
@@ -155,9 +266,12 @@ class HeroCarousel {
             const slide = this.slides[index];
             if (slide) {
                 slide.style.backgroundImage = `url(${imageUrl})`;
-                slide.classList.remove('loading');
+                slide.classList.remove('loading-progress');
                 console.log(`Lazy loaded image for slide ${index + 1}: ${imageUrl}`);
             }
+            
+            // Dopo aver caricato questa immagine, precarica le adiacenti
+            this.preloadAdjacentImages();
         } catch (error) {
             console.error(`Failed to lazy load image for slide ${index + 1}: ${imageUrl}`);
         }
@@ -187,10 +301,10 @@ class HeroCarousel {
                 slide.style.backgroundImage = `url(${imageUrl})`;
                 console.log(`Slide ${index + 1}: First image already loaded, displaying immediately`);
             } else {
-                // Per le altre slide, mostra un colore di sfondo e carica con lazy loading
+                // Per le altre slide, mostra un loading progressivo
                 slide.style.backgroundColor = '#2c5aa0';
-                slide.classList.add('loading');
-                console.log(`Slide ${index + 1}: Will be loaded with lazy loading`);
+                slide.classList.add('loading-progress');
+                console.log(`Slide ${index + 1}: Will be loaded with progressive loading`);
             }
             
             const content = document.createElement('div');
@@ -344,6 +458,9 @@ class HeroCarousel {
         this.slides[this.currentSlide].setAttribute('aria-hidden', 'false');
         this.indicators[this.currentSlide].classList.add('active');
         this.indicators[this.currentSlide].setAttribute('aria-selected', 'true');
+        
+        // Precarica le immagini adiacenti per le prossime transizioni
+        this.preloadAdjacentImages();
         
         // Reset autoplay
         this.resetAutoplay();

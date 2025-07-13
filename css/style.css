@@ -433,6 +433,36 @@ body {
     100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
+/* Loading progressivo per le immagini */
+.carousel-slide.loading-progress {
+    background: linear-gradient(90deg, #2c5aa0 0%, #3a6bb8 50%, #2c5aa0 100%);
+    background-size: 200% 100%;
+    animation: loadingShimmer 2s ease-in-out infinite;
+}
+
+.carousel-slide.loading-progress::before {
+    content: 'Caricamento...';
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 10;
+    opacity: 0.8;
+}
+
+/* Animazione shimmer per il loading */
+@keyframes loadingShimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
 .carousel-slide.active {
     opacity: 1;
 }
