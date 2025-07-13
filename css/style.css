@@ -1111,6 +1111,36 @@ body {
         font-size: 0.6rem;
     }
     
+    .certifications {
+        padding: var(--spacing-lg) 0 !important;
+    }
+    
+    .certification-card {
+        padding: var(--spacing-sm) !important;
+        margin-bottom: var(--spacing-sm) !important;
+        margin-left: var(--spacing-xs) !important;
+        margin-right: var(--spacing-xs) !important;
+    }
+    
+    .certification-header {
+        gap: var(--spacing-xs) !important;
+        margin-bottom: var(--spacing-sm) !important;
+    }
+    
+    .certification-icon {
+        width: 65px !important;
+        height: 65px !important;
+    }
+    
+    .certification-title {
+        font-size: 1rem !important;
+    }
+    
+    .certification-description {
+        font-size: 0.85rem !important;
+        margin-bottom: 0 !important;
+    }
+    
     .contacts {
         padding: var(--spacing-md) 0 !important;
     }
@@ -1215,8 +1245,143 @@ body {
         .footer-email {
             font-size: 0.7rem !important;
         }
+        
+        .certifications {
+            padding: var(--spacing-md) 0 !important;
+        }
+        
+        .certification-card {
+            padding: var(--spacing-xs) !important;
+            margin-left: var(--spacing-xs) !important;
+            margin-right: var(--spacing-xs) !important;
+        }
+        
+        .certification-icon {
+            width: 55px !important;
+            height: 55px !important;
+        }
+        
+        .certification-title {
+            font-size: 0.9rem !important;
+        }
+        
+        .certification-description {
+            font-size: 0.75rem !important;
+        }
     }
 }
+
+/* ===== CERTIFICATIONS SECTION ===== */
+.certifications {
+    padding: var(--spacing-xxl) 0 !important;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    min-height: 100vh !important;
+}
+
+.certification-card {
+    background: #ffffff;
+    border-radius: var(--border-radius-md);
+    border: 1px solid rgba(44, 90, 160, 0.08);
+    padding: var(--spacing-md);
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    margin: 0 var(--spacing-sm);
+}
+
+.certification-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    transform: scaleX(0);
+    transition: transform var(--transition-base);
+}
+
+.certification-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(44, 90, 160, 0.12);
+    border-color: rgba(44, 90, 160, 0.15);
+}
+
+.certification-card:hover::before {
+    transform: scaleX(1);
+}
+
+.certification-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    justify-content: space-between;
+}
+
+.download-icon {
+    opacity: 0.6;
+    transition: all var(--transition-fast);
+    color: var(--accent-color);
+}
+
+.certification-card:hover .download-icon {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+.certification-icon {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    box-shadow: 0 2px 8px rgba(44, 90, 160, 0.2);
+    transition: all var(--transition-base);
+}
+
+.certification-card:hover .certification-icon {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(44, 90, 160, 0.3);
+}
+
+.certification-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: var(--border-radius-sm);
+    background: white;
+    padding: 2px;
+}
+
+.certification-title {
+    font-size: var(--font-size-h5);
+    color: var(--text-primary);
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.certification-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 0;
+    flex-grow: 1;
+}
+
+
 
 /* ===== CONTACTS SECTION ===== */
 .contacts {
