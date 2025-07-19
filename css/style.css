@@ -1907,3 +1907,129 @@ body {
         --background-secondary: #f0f0f0;
     }
 } 
+
+/* ===== SERVICES SECTION ===== */
+.services-section {
+    background: var(--background-secondary);
+    padding: var(--spacing-xl) 0 var(--spacing-xxl) 0;
+    scroll-margin-top: 60px;
+}
+.services-section .service-box {
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-heavy);
+    min-height: 320px;
+    transition: box-shadow var(--transition-fast), transform var(--transition-fast), background 0.4s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    background: transparent;
+}
+.services-section .gradient-primary {
+    background: linear-gradient(135deg, var(--primary-color) 60%, #3a6bb8 100%) !important;
+}
+.services-section .gradient-secondary {
+    background: linear-gradient(135deg, var(--secondary-color) 60%, #2c5aa0 100%) !important;
+}
+.services-section .service-box:hover {
+    transform: translateY(-8px) scale(1.025);
+    box-shadow: 0 12px 40px rgba(44,90,160,0.18), 0 2px 8px rgba(0,0,0,0.10);
+}
+.services-section .service-title {
+    font-size: 2.1rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 2;
+}
+.services-section .service-underline {
+    width: 60px;
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent-color), #fff 80%);
+    margin: 0 auto 0 0;
+}
+.services-section .service-icon {
+    color: var(--accent-color);
+    filter: drop-shadow(0 2px 8px rgba(243,156,18,0.10));
+    transition: color 0.3s;
+}
+.services-section .service-box:hover .service-icon {
+    color: #fffbe6;
+}
+.services-section .service-img-col {
+    z-index: 3;
+}
+.services-section .service-img {
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-medium);
+    object-fit: cover;
+    width: 100%;
+    max-height: 350px;
+    position: relative;
+    top: 0;
+    left: 0;
+    transition: box-shadow 0.3s, transform 0.3s, top 0.3s, left 0.3s;
+}
+@media (min-width: 992px) {
+    .services-section .service-img-col {
+        margin-top: -40px;
+    }
+    .services-section .service-img {
+        box-shadow: 0 8px 32px rgba(44,90,160,0.10);
+        top: 20px;
+        left: 20px;
+    }
+    .services-section .row.align-items-center:nth-child(even) .service-img-col {
+        margin-top: 0;
+        margin-bottom: -40px;
+    }
+    /* Effetto immagine su card anche a destra (Ingegneria) */
+    .services-section .row.align-items-center .service-img-col.order-lg-2 {
+        margin-top: 0;
+        margin-bottom: -40px;
+        z-index: 3;
+    }
+    .services-section .row.align-items-center .service-img-col.order-lg-2 .service-img {
+        left: -20px;
+        right: 0;
+        top: 20px;
+    }
+}
+.services-section .service-box.animate-service {
+    animation: fadeInUp 0.8s cubic-bezier(.23,1.01,.32,1) both;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: none; }
+}
+@media (max-width: 991.98px) {
+    .services-section .row.align-items-center {
+        flex-direction: column !important;
+        gap: 0.5rem;
+        margin-bottom: var(--spacing-md);
+    }
+    .services-section .service-img {
+        margin-bottom: 0.5rem;
+        max-height: 200px;
+        left: 0;
+        top: 0;
+        border: 3px solid var(--background-primary);
+        box-shadow: 0 4px 16px rgba(44,90,160,0.10);
+    }
+    .services-section .service-box {
+        padding: 1.2rem 0.8rem !important;
+        margin-bottom: 0.5rem;
+        box-shadow: 0 2px 8px rgba(44,90,160,0.08);
+    }
+    .services-section .service-title {
+        font-size: 1.2rem;
+    }
+    .services-section .service-underline {
+        width: 32px;
+        height: 2px;
+    }
+} 
