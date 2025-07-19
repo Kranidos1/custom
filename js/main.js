@@ -517,6 +517,35 @@ document.addEventListener('DOMContentLoaded', () => {
     site.setupImageErrorHandling();
 });
 
+// === WORKFLOW SECTION INTERACTION ===
+document.addEventListener('DOMContentLoaded', function () {
+    const workflowCards = document.querySelectorAll('.workflow-step-card');
+    if (workflowCards.length > 0) {
+        workflowCards.forEach(card => {
+            const header = card.querySelector('.workflow-step-header');
+            header.addEventListener('click', function (e) {
+                // Su mobile/tablet: toggle
+                if (window.innerWidth <= 991) {
+                    if (card.classList.contains('active')) {
+                        card.classList.remove('active');
+                    } else {
+                        workflowCards.forEach(c => c.classList.remove('active'));
+                        card.classList.add('active');
+                    }
+                } else {
+                    // Desktop: attiva solo questa
+                    workflowCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                }
+            });
+        });
+        // Attiva il primo step di default su desktop
+        if (window.innerWidth > 991) {
+            workflowCards[0].classList.add('active');
+        }
+    }
+});
+
 // CSS per menu mobile (aggiunto dinamicamente se necessario)
 const mobileMenuCSS = `
 @media (max-width: 768px) {

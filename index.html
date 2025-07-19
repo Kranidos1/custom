@@ -99,7 +99,7 @@
     <section class="about-us py-5" id="about-us">
         <div class="container">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 text-center">
                     <h2 class="section-title">Chi Siamo</h2>
                 </div>
             </div>
@@ -173,13 +173,13 @@
     <section class="services-section py-5" id="servizi">
         <div class="container">
             <div class="row mb-5">
-                <div class="col-12">
+                <div class="col-12 text-center">
                     <h2 class="section-title text-center">Servizi</h2>
                 </div>
             </div>
             <div class="row align-items-center mb-5 flex-lg-row flex-column-reverse">
                 <div class="col-lg-6 mb-4 mb-lg-0 position-relative service-img-col">
-                    <img src="assets/service_1.jpg" alt="Architettura" class="img-fluid rounded shadow service-img">
+                    <img src="assets/services/service_1.jpg" alt="Architettura" class="img-fluid rounded shadow service-img">
                 </div>
                 <div class="col-lg-6">
                     <div class="service-box p-5 h-100 d-flex flex-column justify-content-center gradient-primary text-light rounded shadow-lg animate-service">
@@ -195,7 +195,7 @@
             </div>
             <div class="row align-items-center mb-5">
                 <div class="col-lg-6 position-relative service-img-col order-lg-2 mb-4 mb-lg-0">
-                    <img src="assets/service_2.jpg" alt="Ingegneria" class="img-fluid rounded shadow service-img">
+                    <img src="assets/services/service_2.jpg" alt="Ingegneria" class="img-fluid rounded shadow service-img">
                 </div>
                 <div class="col-lg-6 order-lg-1">
                     <div class="service-box p-5 h-100 d-flex flex-column justify-content-center gradient-secondary text-light rounded shadow-lg animate-service">
@@ -211,7 +211,7 @@
             </div>
             <div class="row align-items-center mb-5 flex-lg-row flex-column-reverse">
                 <div class="col-lg-6 mb-4 mb-lg-0 position-relative service-img-col">
-                    <img src="assets/service_3.jpg" alt="Sviluppo infrastrutturale" class="img-fluid rounded shadow service-img">
+                    <img src="assets/services/service_3.jpg" alt="Sviluppo infrastrutturale" class="img-fluid rounded shadow service-img">
                 </div>
                 <div class="col-lg-6">
                     <div class="service-box p-5 h-100 d-flex flex-column justify-content-center gradient-primary text-light rounded shadow-lg animate-service">
@@ -228,11 +228,71 @@
         </div>
     </section>
 
+    <!-- Workflow Section (Accordion) -->
+    <section class="workflow-section py-5" id="workflow">
+        <div class="container">
+            <div class="workflow-section-header-static text-center mb-5">
+                <h2 class="section-title">Workflow</h2>
+                <p class="section-description">Scopri le fasi chiave del nostro processo progettuale, dalla prima consulenza al controllo finale.</p>
+            </div>
+            <div class="workflow-image-overlay-container">
+                <img src="assets/service_1.jpg" alt="Workflow" class="workflow-bg-img">
+                <div class="workflow-img-gradient-overlay"></div>
+                <div class="workflow-steps-overlay d-flex flex-wrap justify-content-center gap-4">
+                    <div class="workflow-step-card" data-step="1">
+                        <div class="workflow-step-header no-chevron">
+                            <div class="workflow-step-row-top">
+                                <span class="workflow-step-number gradient-text">01</span>
+                                <span class="workflow-step-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="14" r="12"/><path d="M10 14l2 2 5-5"/></svg></span>
+                            </div>
+                            <div class="workflow-step-row-title">
+                                <span class="workflow-step-title">Incontro con la committenza</span>
+                            </div>
+                        </div>
+                        <div class="workflow-step-body always-visible">
+                            <p>Primo confronto per comprendere esigenze, obiettivi e vincoli del progetto.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step-card" data-step="2">
+                        <div class="workflow-step-header">
+                            <span class="workflow-step-number gradient-text">02</span>
+                            <span class="workflow-step-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="14" r="12"/><path d="M14 8v8l4 2"/></svg></span>
+                            <span class="workflow-step-title">Processi progettuali & soluzioni</span>
+                        </div>
+                        <div class="workflow-step-body">
+                            <p>Attivazione dei processi progettuali e stesura di soluzioni alternative, valutando pro e contro di ciascuna.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step-card" data-step="3">
+                        <div class="workflow-step-header">
+                            <span class="workflow-step-number gradient-text">03</span>
+                            <span class="workflow-step-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="14" r="12"/><path d="M10 14h8M14 10v8"/></svg></span>
+                            <span class="workflow-step-title">Condivisione & revisione</span>
+                        </div>
+                        <div class="workflow-step-body">
+                            <p>Condivisione delle soluzioni con la committenza e gli stakeholders. Verifica di eventuali azioni correttive e ottimizzazione del progetto.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step-card" data-step="4">
+                        <div class="workflow-step-header">
+                            <span class="workflow-step-number gradient-text">04</span>
+                            <span class="workflow-step-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="14" r="12"/><path d="M10 18l4-8 4 8"/></svg></span>
+                            <span class="workflow-step-title">Validazione & controllo</span>
+                        </div>
+                        <div class="workflow-step-body">
+                            <p>Verifica, validazione e controllo sull’esecuzione. Monitoraggio costante per garantire qualità e rispetto delle tempistiche.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Certifications Section -->
     <section class="certifications py-5" id="certifications">
         <div class="container">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 text-center">
                     <h2 class="section-title text-center mb-5">Certificazioni</h2>
                 </div>
             </div>
@@ -349,7 +409,7 @@
     <section class="contacts py-5" id="contacts">
         <div class="container">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 text-center">
                     <h2 class="section-title text-center mb-5">Contatti</h2>
                 </div>
             </div>
@@ -432,6 +492,7 @@
     <div class="section-indicator" id="sectionIndicator">
         <div class="section-dot active" data-section="Home" data-target="#home"></div>
         <div class="section-dot" data-section="Chi Siamo" data-target="#about-us"></div>
+        <div class="section-dot" data-section="Servizi" data-target="#servizi"></div>
         <div class="section-dot" data-section="Certificazioni" data-target="#certifications"></div>
         <div class="section-dot" data-section="Contatti" data-target="#contacts"></div>
     </div>
