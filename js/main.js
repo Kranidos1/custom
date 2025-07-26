@@ -17,7 +17,6 @@ class MoeniaSite {
         this.setupHeader();
         this.setupMobileMenu();
         this.setupSmoothScrolling();
-        this.setupSectionNavigation();
         this.setupFooterVisibility();
         this.setupConfigLoader();
         this.setupIntersectionObserver();
@@ -74,11 +73,16 @@ class MoeniaSite {
             return;
         }
         
-        // Su desktop, nascondi il footer solo nella sezione del carousel (primi 80% dell'altezza del carousel)
-        if (scrollTop < heroHeight * 0.8) {
-            this.footer.classList.add('hidden');
-        } else {
+        // Su desktop, mostra il footer solo quando si raggiunge la fine del sito
+        const documentHeight = document.documentElement.scrollHeight;
+        const windowHeight = window.innerHeight;
+        const scrollBottom = scrollTop + windowHeight;
+        
+        // Mostra il footer quando siamo a 100px dalla fine del documento
+        if (scrollBottom >= documentHeight - 100) {
             this.footer.classList.remove('hidden');
+        } else {
+            this.footer.classList.add('hidden');
         }
     }
     
@@ -179,192 +183,7 @@ class MoeniaSite {
         });
     }
     
-    setupSectionNavigation() {
-        // Variabili per il controllo dello scroll
-        this.currentSectionIndex = 0;
-        this.sections = [];
-        this.sectionDots = [];
-        
-        // Ottieni tutte le sezioni e la div location
-        this.sections = document.querySelectorAll('section[id], div[id="location"]');
-        console.log('Sezioni trovate:', this.sections.length);
-        
-        // Verifica che le sezioni siano valide
-        if (this.sections.length === 0) {
-            console.warn('Nessuna sezione trovata! Verifica che le sezioni abbiano un ID.');
-            return;
-        }
-        
-        // Log delle sezioni trovate
-        this.sections.forEach((section, index) => {
-            console.log(`Sezione ${index}:`, section.id, section.offsetTop);
-        });
-        
-        // Setup indicatori delle sezioni
-        this.setupSectionIndicators();
-        
-        // Aggiungi event listener per lo scroll (solo per aggiornare indicatori)
-        window.addEventListener('scroll', () => {
-            this.handleSectionScroll();
-        });
-        
-        // Inizializza l'indicatore corrente
-        this.updateCurrentSection();
-        
-        // Inizializza la visibilità degli indicatori
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const windowHeight = window.innerHeight;
-        this.updateSectionIndicatorVisibility(scrollTop, windowHeight);
-    }
-    
-    setupSectionIndicators() {
-        const indicator = document.getElementById('sectionIndicator');
-        if (!indicator) {
-            console.log('Indicatore sezioni non trovato');
-            return;
-        }
-        
-        // Ottieni tutti i dots
-        this.sectionDots = indicator.querySelectorAll('.section-dot');
-        console.log('Dots trovati:', this.sectionDots.length);
-        
-        // Debug: verifica che i target corrispondano alle sezioni
-        this.sectionDots.forEach((dot, index) => {
-            const target = dot.getAttribute('data-target');
-            const section = document.querySelector(target);
-            console.log(`Dot ${index}:`, target, section ? '✓' : '✗');
-        });
-        
-        // Aggiungi event listener per click sui dots
-        this.sectionDots.forEach((dot, index) => {
-            dot.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const target = dot.getAttribute('data-target');
-                const section = document.querySelector(target);
-                if (section) {
-                    console.log('Click on indicator:', index, target);
-                    this.scrollToSection(section);
-                } else {
-                    console.warn('Section not found:', target);
-                }
-            });
-        });
-    }
-    
-    updateSectionIndicator(activeIndex) {
-        if (!this.sectionDots || this.sectionDots.length === 0) {
-            console.warn('Nessun indicatore trovato');
-            return;
-        }
-        
-        this.sectionDots.forEach((dot, index) => {
-            if (index === activeIndex) {
-                dot.classList.add('active');
-            } else {
-                dot.classList.remove('active');
-            }
-        });
-        
-        console.log('Indicatore aggiornato:', activeIndex);
-    }
-    
-    handleSectionScroll() {
-        this.updateCurrentSection();
-    }
-    
-    updateCurrentSection() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const windowHeight = window.innerHeight;
-        const currentSection = this.getCurrentSection(scrollTop, windowHeight);
-        
-        // Gestisci visibilità indicatori
-        this.updateSectionIndicatorVisibility(scrollTop, windowHeight);
-        
-        if (currentSection !== this.currentSectionIndex) {
-            this.currentSectionIndex = currentSection;
-            this.updateSectionIndicator(currentSection);
-            console.log('Sezione corrente:', currentSection, 'Scroll position:', scrollTop);
-        }
-    }
-    
-    updateSectionIndicatorVisibility(scrollTop, windowHeight) {
-        const sectionIndicator = document.getElementById('sectionIndicator');
-        if (!sectionIndicator) return;
-        
-        // Ottieni la sezione carousel
-        const carouselSection = document.querySelector('.hero-carousel');
-        if (!carouselSection) return;
-        
-        const carouselTop = carouselSection.offsetTop;
-        const carouselHeight = carouselSection.offsetHeight;
-        const carouselBottom = carouselTop + carouselHeight;
-        
-        // Nascondi gli indicatori quando siamo nella sezione carousel (primi 80% dell'altezza)
-        if (scrollTop >= carouselTop && scrollTop < carouselTop + (carouselHeight * 0.8)) {
-            sectionIndicator.classList.add('hidden');
-            console.log('Indicatori nascosti - nel carousel');
-        } else {
-            sectionIndicator.classList.remove('hidden');
-            console.log('Indicatori visibili - fuori dal carousel');
-        }
-    }
-    
-    getCurrentSection(scrollTop, windowHeight) {
-        let currentIndex = 0;
-        
-        this.sections.forEach((section, index) => {
-            const sectionTop = section.offsetTop;
-            const sectionBottom = sectionTop + section.offsetHeight;
-            const threshold = windowHeight * 0.4; // 40% della viewport
-            
-            if (scrollTop >= sectionTop - threshold && 
-                scrollTop < sectionBottom - threshold) {
-                currentIndex = index;
-            }
-        });
-        
-        // Se siamo nella sezione "location", attiva l'indicatore "Contatti"
-        const locationSection = document.getElementById('location');
-        if (locationSection) {
-            const locationTop = locationSection.offsetTop;
-            const locationBottom = locationTop + locationSection.offsetHeight;
-            
-            if (scrollTop >= locationTop - threshold && 
-                scrollTop < locationBottom - threshold) {
-                // Trova l'indice della sezione "contacts" negli indicatori
-                const contactsDot = document.querySelector('[data-target="#contacts"]');
-                if (contactsDot) {
-                    const contactsIndex = Array.from(this.sectionDots).indexOf(contactsDot);
-                    if (contactsIndex !== -1) {
-                        return contactsIndex;
-                    }
-                }
-            }
-        }
-        
-        // Se siamo nella sezione "contacts", attiva l'indicatore "Contatti"
-        const contactsSection = document.getElementById('contacts');
-        if (contactsSection) {
-            const contactsTop = contactsSection.offsetTop;
-            const contactsBottom = contactsTop + contactsSection.offsetHeight;
-            
-            if (scrollTop >= contactsTop - threshold && 
-                scrollTop < contactsBottom - threshold) {
-                // Trova l'indice della sezione "contacts" negli indicatori
-                const contactsDot = document.querySelector('[data-target="#contacts"]');
-                if (contactsDot) {
-                    const contactsIndex = Array.from(this.sectionDots).indexOf(contactsDot);
-                    if (contactsIndex !== -1) {
-                        return contactsIndex;
-                    }
-                }
-            }
-        }
-        
-        return currentIndex;
-    }
+
     
 
     
@@ -373,13 +192,6 @@ class MoeniaSite {
         
         const headerHeight = this.header?.offsetHeight || 80;
         const targetPosition = Math.max(0, section.offsetTop - headerHeight);
-        
-        // Aggiorna l'indice della sezione corrente
-        const sectionIndex = Array.from(this.sections).indexOf(section);
-        if (sectionIndex !== -1) {
-            this.currentSectionIndex = sectionIndex;
-            this.updateSectionIndicator(sectionIndex);
-        }
         
         window.scrollTo({
             top: targetPosition,
