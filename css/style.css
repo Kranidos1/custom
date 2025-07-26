@@ -1,7 +1,7 @@
 /* ===== CSS VARIABLES ===== */
 :root {
     /* Color Palette */
-    --primary-color: #2c5aa0;
+    --primary-color: #1e3a5f;
     --secondary-color: #1e3a5f;
     --accent-color: #f39c12;
     --text-primary: #333333;
@@ -1530,7 +1530,7 @@ body {
 
 /* ===== CONTACTS SECTION ===== */
 .contacts {
-    padding: var(--spacing-xxl) 0 !important;
+    padding: var(--spacing-lg) 0 !important;
     background: var(--background-primary) !important;
     min-height: 100vh !important;
 }
@@ -3288,4 +3288,113 @@ body {
   .services-section .service-box {
     margin-bottom: 0 !important;
   }
+}
+
+/* ===== LOCATION SECTION STYLES ===== */
+.location-section {
+    position: relative;
+    width: 100%;
+}
+
+.location-banner {
+    background: var(--primary-color);
+    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.location-banner-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.location-banner-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+}
+
+.location-banner-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.location-banner-text {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.map-container-full {
+    width: 100%;
+    height: 400px;
+    position: relative;
+}
+
+.map-container-full {
+    position: relative;
+}
+
+.map-container-full {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.map-container-full:hover {
+    transform: scale(1.02);
+}
+
+.map-container-full iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    filter: grayscale(100%);
+    pointer-events: none;
+}
+
+
+
+/* Responsive Design for Location Section */
+@media (max-width: 768px) {
+    .location-banner {
+        padding: 15px 0;
+    }
+    
+    .location-banner-content {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .location-banner-text {
+        font-size: 16px;
+    }
+    
+    .map-container-full {
+        height: 350px;
+    }
+}
+
+@media (max-width: 480px) {
+    .location-banner {
+        padding: 10px 0;
+    }
+    
+    .location-banner-text {
+        font-size: 14px;
+    }
+    
+    .map-container-full {
+        height: 250px;
+    }
 }

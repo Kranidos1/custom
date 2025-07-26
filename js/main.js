@@ -185,8 +185,8 @@ class MoeniaSite {
         this.sections = [];
         this.sectionDots = [];
         
-        // Ottieni tutte le sezioni
-        this.sections = document.querySelectorAll('section[id]');
+        // Ottieni tutte le sezioni e la div location
+        this.sections = document.querySelectorAll('section[id], div[id="location"]');
         console.log('Sezioni trovate:', this.sections.length);
         
         // Verifica che le sezioni siano valide
@@ -324,6 +324,44 @@ class MoeniaSite {
                 currentIndex = index;
             }
         });
+        
+        // Se siamo nella sezione "location", attiva l'indicatore "Contatti"
+        const locationSection = document.getElementById('location');
+        if (locationSection) {
+            const locationTop = locationSection.offsetTop;
+            const locationBottom = locationTop + locationSection.offsetHeight;
+            
+            if (scrollTop >= locationTop - threshold && 
+                scrollTop < locationBottom - threshold) {
+                // Trova l'indice della sezione "contacts" negli indicatori
+                const contactsDot = document.querySelector('[data-target="#contacts"]');
+                if (contactsDot) {
+                    const contactsIndex = Array.from(this.sectionDots).indexOf(contactsDot);
+                    if (contactsIndex !== -1) {
+                        return contactsIndex;
+                    }
+                }
+            }
+        }
+        
+        // Se siamo nella sezione "contacts", attiva l'indicatore "Contatti"
+        const contactsSection = document.getElementById('contacts');
+        if (contactsSection) {
+            const contactsTop = contactsSection.offsetTop;
+            const contactsBottom = contactsTop + contactsSection.offsetHeight;
+            
+            if (scrollTop >= contactsTop - threshold && 
+                scrollTop < contactsBottom - threshold) {
+                // Trova l'indice della sezione "contacts" negli indicatori
+                const contactsDot = document.querySelector('[data-target="#contacts"]');
+                if (contactsDot) {
+                    const contactsIndex = Array.from(this.sectionDots).indexOf(contactsDot);
+                    if (contactsIndex !== -1) {
+                        return contactsIndex;
+                    }
+                }
+            }
+        }
         
         return currentIndex;
     }
@@ -607,4 +645,18 @@ if (!document.querySelector('#mobile-menu-styles')) {
     style.id = 'mobile-menu-styles';
     style.textContent = mobileMenuCSS;
     document.head.appendChild(style);
+}
+
+// === GOOGLE MAPS FUNCTION ===
+function openGoogleMaps() {
+    // Coordinate di Scisciano, Via Palazzuolo 78
+    const latitude = 40.9167;
+    const longitude = 14.4833;
+    const address = "Via Palazzuolo, 78, 80054 Scisciano NA, Italia";
+    
+    // URL per aprire Google Maps
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+    
+    // Apri in una nuova finestra/tab
+    window.open(mapsUrl, '_blank');
 } 

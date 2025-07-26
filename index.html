@@ -432,8 +432,37 @@
         </div>
     </section>
 
+    <!-- Location Section -->
+    <div class="location-section" id="location">
+        <div class="location-banner">
+            <div class="location-banner-content">
+                <div class="location-banner-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                </div>
+                <div class="location-banner-text">
+                    LOCALIZZACI SU GOOGLE
+                </div>
+            </div>
+        </div>
+        <div class="map-container-full" onclick="openGoogleMaps()">
+            <iframe 
+                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Via+Palazzuolo,+78,+80054+Scisciano+NA,+Italia&zoom=16"
+                width="100%" 
+                height="400" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Moenia s.r.l. - Via Palazzuolo, 78, Scisciano (NA)"
+                aria-label="Mappa Google Maps della sede di Moenia s.r.l. a Scisciano">
+            </iframe>
+        </div>
+    </div>
+
     <!-- Contacts Section -->
-    <section class="contacts py-5" id="contacts">
+    <section class="contacts py-3" id="contacts">
         <div class="container">
             <div class="row">
                 <div class="col-12 text-center">
