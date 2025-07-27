@@ -471,4 +471,49 @@ function openGoogleMaps() {
     
     // Apri in una nuova finestra/tab
     window.open(mapsUrl, '_blank');
-} 
+}
+
+// === CERTIFICATION DOWNLOAD FUNCTIONS ===
+function downloadCertification(certType) {
+    const certificationFiles = {
+        'iso-9001': 'assets/certificazioni/iso-9001-moenia_it.pdf',
+        'iso-14001': 'assets/certificazioni/iso-14001-moenia_it.pdf',
+        'iso-45001': 'assets/certificazioni/iso-45001-moenia_it.pdf',
+        'uni-pdr-125': 'assets/certificazioni/CERT_parita-di-genere.pdf',
+        'qa-cert': 'assets/certificazioni/QA-CERT-CAM_016_ROSSI.pdf'
+    };
+    
+    const filePath = certificationFiles[certType];
+    if (!filePath) {
+        console.error('Certificazione non trovata:', certType);
+        return;
+    }
+    
+    // Crea un link temporaneo per il download
+    const link = document.createElement('a');
+    link.href = filePath;
+    link.download = '';
+    link.target = '_blank';
+    
+    // Aggiungi il link al DOM, cliccalo e rimuovilo
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Setup download buttons quando il DOM è pronto
+document.addEventListener('DOMContentLoaded', function() {
+    const downloadButtons = document.querySelectorAll('.download-button');
+    
+    downloadButtons.forEach((button, index) => {
+        const certTypes = ['iso-9001', 'iso-14001', 'iso-45001', 'uni-pdr-125', 'qa-cert'];
+        const certType = certTypes[index];
+        
+        if (certType) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                downloadCertification(certType);
+            });
+        }
+    });
+}); 

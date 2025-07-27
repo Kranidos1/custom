@@ -56,75 +56,38 @@ class HeroCarousel {
                     slides: [
                         {
                             image: "assets/carousel/1.webp",
-                            title: "Progettazione Architettonica",
-                            subtitle: "Soluzioni innovative per il futuro dell'edilizia",
-                            cta: "Scopri i nostri progetti",
-                            ctaUrl: "#about-us",
-                            size: 62,
-                            priority: "high"
-                        },
-                        {
-                            image: "assets/carousel/2.webp",
                             title: "Consulenza Ingegneristica",
                             subtitle: "Competenza tecnica al servizio dell'innovazione",
-                            cta: "Chi Siamo",
-                            ctaUrl: "#about-us",
                             size: 88,
                             priority: "high"
                         },
                         {
-                            image: "assets/carousel/3.webp",
+                            image: "assets/carousel/2.webp",
                             title: "Sostenibilità",
                             subtitle: "Progetti eco-compatibili per un futuro migliore",
-                            cta: "Contattaci",
-                            ctaUrl: "#contacts",
                             size: 275,
                             priority: "medium"
                         },
                         {
-                            image: "assets/carousel/4.webp",
+                            image: "assets/carousel/3.webp",
                             title: "Innovazione Tecnologica",
                             subtitle: "Tecnologie all'avanguardia per progetti di eccellenza",
-                            cta: "Chi Siamo",
-                            ctaUrl: "#about-us",
                             size: 99,
                             priority: "high"
                         },
                         {
-                            image: "assets/carousel/5.webp",
+                            image: "assets/carousel/4.webp",
                             title: "Design Sostenibile",
                             subtitle: "Architettura che rispetta l'ambiente e il futuro",
-                            cta: "Chi Siamo",
-                            ctaUrl: "#about-us",
                             size: 142,
                             priority: "medium"
                         },
                         {
-                            image: "assets/carousel/6.webp",
+                            image: "assets/carousel/5.webp",
                             title: "Eccellenza Progettuale",
                             subtitle: "Qualità e precisione in ogni dettaglio",
-                            cta: "Conosci il nostro team",
-                            ctaUrl: "#about-us",
                             size: 763,
                             priority: "low"
-                        },
-                        {
-                            image: "assets/carousel/7.webp",
-                            title: "Soluzioni Personalizzate",
-                            subtitle: "Ogni progetto è unico, ogni soluzione è su misura",
-                            cta: "Inizia il tuo progetto",
-                            ctaUrl: "#contacts",
-                            size: 37,
-                            priority: "high"
-                        },
-                        {
-                            image: "assets/carousel/8.webp",
-                            title: "Visione del Futuro",
-                            subtitle: "Progettiamo oggi gli spazi di domani",
-                            cta: "Collabora con noi",
-                            ctaUrl: "#contacts",
-                            size: 74,
-                            priority: "high"
                         }
                     ],
                     settings: {
@@ -244,30 +207,8 @@ class HeroCarousel {
             subtitle.className = 'carousel-subtitle';
             subtitle.textContent = slideData.subtitle;
             
-            const cta = document.createElement('a');
-            cta.className = 'carousel-cta';
-            cta.href = slideData.ctaUrl;
-            cta.textContent = slideData.cta;
-            
-            // Gestione speciale per i link del carousel
-            cta.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = document.querySelector(slideData.ctaUrl);
-                if (target) {
-                    const headerHeight = document.querySelector('.header')?.offsetHeight || 80;
-                    const extraOffset = -30; // Offset negativo per posizionare meglio
-                    const targetPosition = Math.max(0, target.offsetTop - headerHeight - extraOffset);
-                    
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-            
             content.appendChild(title);
             content.appendChild(subtitle);
-            content.appendChild(cta);
             slide.appendChild(content);
             
             slidesContainer.appendChild(slide);
